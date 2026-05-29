@@ -1,0 +1,917 @@
+@charset "UTF-8";
+
+/* Resetando alguns estilos padrões */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+
+/* default all pages*/
+h1 {
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 30px;
+}
+
+a{
+ text-decoration: none;	
+ color: white;
+ font-size: 1.2rem;
+}
+
+ h2 , span, label{
+  color: white;
+ }
+
+
+
+
+header{
+  display: flex;
+  justify-content: space-between; 
+  padding:20px; 
+  height: auto;  
+  background: linear-gradient(135deg,  #003b5c, #f5f0e1, #ffffff); 
+}
+
+
+
+
+header>div{
+  height: auto;
+  width: auto;
+  display: grid;  
+  padding: 10px; 
+  color:white;
+}
+
+
+
+#bank-img{
+    display: block;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+	}
+
+
+
+main{
+  display: grid;
+  place-items: center;
+  width:100%;
+  height: 100vh;
+  background: linear-gradient(135deg,  #003b5c, #002e47, #006f91);  
+}
+
+
+
+
+
+footer{
+  display: flex;
+  justify-content: space-between; 
+  padding:20px; 
+  height: auto;   
+  background: linear-gradient(135deg,  #003b5c, #f5f0e1, #ffffff);
+}
+
+
+
+
+
+
+
+/*index*/
+#main-img{
+	display: block;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+/*home*/
+.login-form {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    width: 300px;
+    text-align: center;
+}
+
+.login-form h2 {
+    margin-bottom: 30px;
+    color: #4e73df;
+}
+
+
+.input-group {
+    margin-bottom: 20px;   
+}
+
+
+
+.input-group input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    outline: none;
+    transition: 0.2s;
+}
+
+
+.input-group input:focus,
+.input-group button:focus{
+    border-color: #4e73df;
+    box-shadow: 0 0 5px rgba(78,115,223,0.5);
+}
+
+
+
+.input-group button {
+    width: 30%;
+    padding: 10px;
+    background-color: #1cc88a;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+
+
+
+
+.btn-group{
+   display: flex;
+   justify-content: center;
+   margin-bottom: 20px; 
+   padding:10px;
+  }
+
+
+.btn-group button {
+    width: 60%;
+    padding: 10px;
+    background-color: #1cc88a;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+
+.input-group button:hover,
+.btn-group button:hover {
+    background-color: #17a673;
+}
+
+
+
+
+.error-msg {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+    display: block;
+}
+
+
+
+
+
+
+
+
+/* bancs*/
+
+#container-bancs{
+width: auto;	
+padding: 10px;
+}
+
+
+
+#table {
+    width: 90%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: auto;
+}
+
+
+
+
+/* Linhas */
+#table tbody tr {
+    border-bottom: 1px solid #ddd;
+    transition: background 0.3s;
+    text-align: left;
+}
+
+#table tbody tr:hover {
+    background-color: #408080;
+}
+
+/* Células */
+#table tbody td {
+	border-bottom: 1px solid #ddd;
+    padding: 10px 12px;
+    vertical-align: middle;
+    color: white;
+}
+
+#table tbody td a {
+  color:white;
+	}
+	
+	
+/* Botão Select */
+.select-btn {
+    display: inline-block;
+    padding: 6px 14px;
+    background-color: #1cc88a;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.select-btn:hover {
+    background-color: #17a673;
+}
+
+.bank-select {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.bank-select:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+
+
+/* Imagem do banco */
+.bank-img {
+    display: block;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+
+
+.select-overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    padding: 4px 0;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.2s;   font-size: 14px;
+}
+
+.bank-select:hover .select-overlay {
+    opacity: 1;
+}
+
+
+#container-btn{
+	height: 100px;
+}
+
+#btn-default{
+	height:auto;
+	display: inline-block;
+    padding: 20px;
+    background-color: #408080;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: 0.2s;
+    text-align: center;    
+}
+
+
+#btn-default:hover {
+   transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+
+
+
+
+
+
+
+
+
+/* accounts*/
+.services-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+
+.service-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    height: 80px;
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 12px;    
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.link-desabilitado {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 180px;
+    height: 80px;
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 12px;    
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    
+  pointer-events: none; 
+  cursor: default;      
+  color: gray;          
+  
+}
+
+
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.account-select-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+/*
+.account-select-container>label {
+	color:white;
+	}
+*/	
+	
+
+
+#accountSelect {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    min-width: 250px;
+}
+
+#accountDetails {
+	width:60%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.account-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 25px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: 0.3s ease;
+}
+
+.account-card:hover {
+    transform: translateY(-5px);
+}
+
+.account-title {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #4e73df;
+}
+
+.account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.account-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background: #f8f9fc;
+    border-radius: 8px;
+    position: relative;
+}
+
+.toggle-amount {
+    cursor: pointer;
+    margin-left: 10px;
+    font-size: 16px;
+    user-select: none;
+    color: #6c757d;
+    transition: color 0.2s;
+}
+
+.toggle-amount:hover {
+    color: #1cc88a;
+}
+
+.account-label {
+    font-weight: 600;
+    color: #004080;
+}
+
+.account-value {
+    font-weight: 500;
+    color: #000080;
+}
+
+
+
+/*list invest*/
+#table tr{	
+	color:white;
+	text-align: left;
+}
+
+
+
+
+
+/*cad invest*/
+#container-form{
+	width: 80%;
+	padding: 10px;
+}
+
+#content-form{
+    display: flex;   
+    justify-content: space-between;
+    padding: 10px;   
+    border-radius: 8px;
+}
+
+
+/*
+#container-form h2 , span{
+	color:white;
+}
+*/
+
+
+
+/*slctd_investment*/
+#container-slctd-invest{	
+	width: 100%;
+    max-width: 500px;
+    padding: 25px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transition: 0.3s ease;    
+    text-align: center;
+}
+
+#container-slctd-invest span, p {	
+	color:black;
+	margin-top: 10px;
+}
+
+
+
+
+
+
+/*cad_trs*/
+#main-trs{
+  display: grid;
+  place-items: center;
+  width:100%; 
+  height:auto;  
+  background: linear-gradient(135deg,  #003b5c, #002e47, #006f91);  
+}
+
+
+
+
+#container-account{
+  display: block;
+  width: auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;	  
+}
+#content-account{
+  display: flex; 
+  justify-content: center; 
+  width:auto;
+}  
+#content-account .input-group{		
+  width: 20%;
+  padding: 0 10px 0 0 ;
+}
+
+
+
+
+#container-trs{	
+	/*
+  display: grid;
+  place-items: center;
+  width:100%; 
+  height:auto;  
+  background: linear-gradient(135deg,  #003b5c, #002e47, #006f91);*/ 
+ 
+  display: block;
+  width: auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  place-items: center;
+}
+
+#content-option{
+	width:60%;
+	margin: 10px;
+	padding: 10px;
+	display:flex;	
+	justify-content:space-around;
+	border: 1px solid #ccc;
+    border-radius: 5px;		
+}
+
+#content-option>div{
+	width: 120px;
+}
+
+#content-source-text{
+  /*
+  display: block;
+  width: auto; 
+  padding:10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  place-items: center;
+  */
+  
+  display: flex; 
+  justify-content: center; 
+  width:auto;
+  padding:10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px; 
+}
+
+#content-source-text .input-group{		
+  width: 40%;
+  padding: 0 10px 0 0 ;
+}
+
+
+
+
+#container-forward{
+	 display: block;
+  width: auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  place-items: center;
+}
+
+#content-forward-text{
+  /*display: block;
+  width: auto; 
+  padding:10px; 
+  margin-bottom: 10px;
+  place-items: center;
+  */
+  display: flex; 
+  justify-content: center; 
+  width:100%;
+  padding:10px; 
+  margin-bottom: 10px;  
+}
+
+#content-forward-text .input-group{		
+  width: 40%;
+  padding: 0 10px 0 0 ;
+}
+
+#content-accounts{
+  display: block; 
+  place-items: center;
+ text-align:center;
+  width:100%;
+  padding:10px; 
+  margin-bottom: 10px; 
+}
+
+#accountSelect{
+	width: 40%;	
+}
+
+
+
+
+
+#container-account-forward{
+  display: block;
+  width: auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  
+	/*
+    display: none;       
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    */
+}
+
+/*
+#container-account-forward.show {
+	 display: block; 	
+}
+*/
+
+
+
+
+
+#container-form-trs{
+  display: block;
+  width: auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;  
+}
+
+#content-form-trs, #content-form-trs-bg{
+  display: flex; 
+  justify-content: center; 
+  width:auto;  
+}
+
+#content-form-trs .input-group{		
+  width: 20%;
+  padding: 0 10px 0 0 ;
+}
+
+#content-form-trs-bg .input-group{		
+  width: 40%;
+  padding: 0 10px 0 0 ;
+}
+
+
+
+
+
+#container-btn-trs{
+  display: block;
+  width: auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;	
+}
+
+.btn-group>button{	
+	width: auto;
+	height:auto;
+	padding:10px;
+}
+
+
+
+#container-pay{
+  display: none;
+  width: auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  place-items: center; 	
+}
+
+#container-pay.show{
+	 display: block; 	
+}
+
+
+
+
+
+/*
+#content-source-trf {
+    display: none;       
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#content-source-trf.show {
+    display: flex;  
+    justify-content: space-around;  
+}
+
+#content-accounts{
+    display: none;       
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#content-accounts.show{
+    display: block;    
+}
+
+#content-forward{
+    width: 300px;
+	padding: 0 10px 0 0 ;   
+}
+#content-forward.remove{
+	display: none; 
+}
+
+#container-account-forward{
+    display: none;       
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#container-account-forward.show {
+	 display: block; 	
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+#container-trf,
+#container-pay,
+#container-way{
+	display: none;	 
+	padding: 10px;	
+	justify-content:space-around;
+	border: 1px solid #ccc;
+    border-radius: 5px;	 	
+}
+
+
+
+#container-trf.show,
+#container-pay.show,
+#container-way.show{
+	 display: block; 	
+}
+*/
+
+
+
+
+
+/*
+#container-account,
+#container-account-forward,
+#container-form-trs{
+  display: block;  
+  width: auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+
+#content-account,
+#container-account-forward,
+#content-form-trs,
+#container-source-bg{
+  display: flex; 
+  justify-content: center; 
+}
+
+	
+#content-source-text{ 
+   width: 300px;
+  padding: 0 10px 0 0 ; 
+}
+
+
+#container-account .input-group,
+#container-account-forward .input-group{		
+  width: 150px;
+  padding: 0 10px 0 0 ;
+}
+
+#container-source .input-group{		
+  width: 200px;
+  padding: 0 10px 0 0 ;		
+}
+
+#container-source-bg .input-group{		
+	width: 300px;
+	padding: 0 10px 0 0 ;
+}	
+	
+#content-option{
+	margin: 10px;
+	padding: 10px;
+	display:flex;
+	justify-content:space-around;
+	border: 1px solid #ccc;
+    border-radius: 5px;	
+}
+
+
+#container-forward{
+  display: flex; 
+  justify-content: center;   
+}
+
+
+*/
+
+
+
+
+
+
