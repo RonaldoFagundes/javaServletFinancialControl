@@ -41,15 +41,13 @@
 	<main id="main-trs">	
 	  
 	   <div>
-	     <h1>Transferências</h1>     
+	     <h1><%= request.getAttribute("typeTitle")%></h1>     
 	   </div>
 	   
 	   
 	      
-	     <form name="frmTrs" action="creatTrs" method="POST">
-	     
-	     
-	        
+	     <form name="frmTrs" action="creatTrs" method="POST">     
+	     	        
 	        <div id="container-account">	        
 	          <div id="content-account">	          	        	         	         
 	             <div class="input-group">
@@ -87,7 +85,7 @@
 	           </div>	            	              
 	        </div>	        
 	      </div>  
-	      
+	              	
 	        		
 		 <div id="container-trs">
 		   <div id="content-option">		   	        
@@ -121,18 +119,16 @@
                 </div>  
 	        </div>
 	      </div>
-	        
-	        
+	         
 	       <div id="content-source-text">	                	
 	           <div class="input-group">
 	        	 <input type="text" name="sourceIn" placeholder="Origem">
 				 <span class="error-msg" id="errorDesc"></span>
 			   </div> 	         
 	        </div>	 
-	        	     	 
 	          
 	        
-	      <div id="container-trs">
+	      <div id="container-source-trs">
 		   <div id="content-option">		   	        
 	            <div><span>Origem:</span></div>	            
 	            <div>               
@@ -149,19 +145,7 @@
                 </div>                          
 	        </div>  
 	      </div>
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	        
-	           
+	      	           
 	       <div id="container-forward">	
 	              	        	  
 	         <div id="content-forward-text">	
@@ -169,7 +153,9 @@
 				 <input type="text" name="who" placeholder="Destino">
 				 <span class="error-msg" id="errorDesc"></span>				 
 			   </div>			  		      
-	        </div> 	 
+	        </div> 
+	                	
+	         
 	        <div id="content-accounts">
 	            <div><span>Escolha uma Conta:</span></div> 
 	           <!-- <label for="accountSelect"></label> -->
@@ -204,9 +190,8 @@
 			   <input type="hidden" name="bank-source" id="bank-source">			    
 	        </div>	                  
 	      </div> 	
-	      	       
 	        
-	      <div id="container-trs"> 	      	      
+	      <div id="container-way"> 	      	      
 	          <div id="content-option">	        
 	            <div><span>Canal:</span></div> 
 	            <div>                
@@ -223,10 +208,7 @@
                  </div>
 	          </div> 	      
 	      </div>
-	          
-	             
-	             
-	              
+	               
 	      
 	       <div id="container-pay"> 	      	      
 	          <div id="content-option">	         
@@ -245,9 +227,7 @@
                  </div>
 	        </div>	      
 	     </div>
-	         
-	         
-	         	        
+	         	            
 	            
 	     <div id="container-account-forward"> 	         	         
 	           <div id="content-account">	           
@@ -268,12 +248,7 @@
 	              </div>       	             
 	          </div> 
 	       </div>
-	        
-	         
-	         
-	         
-	               
-	               
+	           	              
 	      
 	      <div id="container-form-trs">
 	       

@@ -29,49 +29,60 @@ function onloadTrfOut(){
 
 
 
-
-
 const trfRadios = document.querySelectorAll('input[name="trf"]');
-const contentSource = document.getElementById('content-source-trf');
+const sourceRadios = document.querySelectorAll('input[name="source"]');
+
+const contentSourceText = document.getElementById('content-source-text');
+const containerSourceTrs = document.getElementById("container-source-trs");
+
+const containerForward = document.getElementById("container-forward");
+const contentForwardText = document.getElementById('content-forward-text');
+const contentAccounts = document.getElementById("content-accounts");	
+
 
 trfRadios.forEach(radio => {
     radio.addEventListener('change', () => {
-        if (radio.value === 'out' && radio.checked) {
-            contentSource.classList.add('show');
+		
+        if (radio.value === 'out' && radio.checked) {			
+		    		
+            contentSourceText.classList.remove('show');
+			containerSourceTrs.classList.add("show");
+			
+			containerForward.classList.add('show');
+			contentAccounts.classList.remove('show');
+			contentForwardText.classList.add('show');
+			
         } else {
-            contentSource.classList.remove('show');
-        }
+			
+			containerSourceTrs.classList.remove("show");
+			contentSourceText.classList.add('show');
+			
+        }		
+		
     });
 });
 
 
 
-const sourceRadios = document.querySelectorAll('input[name="source"]');
-
-const contentAccounts = document.getElementById('content-accounts');
-const contentForward = document.getElementById("content-forward");
-
 sourceRadios.forEach(radio => {
-	radio.addEventListener('change',()=>{
-		
+	radio.addEventListener('change',()=>{		
 		
 		if(radio.value==='pessoal' && radio.checked ){
+			
+			containerForward.classList.add('show');
+			
+			contentForwardText.classList.remove('show');
 			contentAccounts.classList.add('show');
-			contentForward.classList.add('remove');
+						
 		}else{
+			
+			containerForward.classList.add('show');
+			
 			contentAccounts.classList.remove('show');
-			contentForward.classList.remove('remove');
-		}
-		
-		/*
-		if(radio.value==='outros' && radio.checked ){
-			contentForward.classList.add('show');
-		}else{
-			contentForward.classList.remove('show');
-		}
-		*/
-				
-		
+			contentForwardText.classList.add('show');			
+			
+		}	
+					
 	});
 });
 
@@ -79,19 +90,23 @@ sourceRadios.forEach(radio => {
 
 
 
-
-
-
 function onloadTrs() {
  
-    const containerTrf = document.getElementById("container-trf");
 	
-	const containerPay = document.getElementById("container-pay");
+    const containerTrs = document.getElementById("container-trs");	
+	
+	const contentSourceText = document.getElementById("content-source-text");	
+	
+	const containerSourceTrs = document.getElementById("container-source-trs");	
+	
+	const containerForward = document.getElementById("container-forward");	
 	
 	const containerWay = document.getElementById("container-way");	
-		
-	const containerAccountForward = document.getElementById("container-account-forward");	
-		
+	
+	const containerPay = document.getElementById("container-pay");		
+	
+	const containerAccountForward = document.getElementById("container-account-forward");
+	
 		
 	let trs_type = frmTrs.trsType.value;
 	
@@ -99,56 +114,59 @@ function onloadTrs() {
 	
 	let type_acc = frmTrs.typeAcc.value;
 		
-		console.log("type_acc "+type_acc);
-		
-		
+		//console.log("type_acc "+type_acc);
+						
 
-    if (!containerTrf) {
+    if (!containerTrs) {
         console.error("Elemento #container-trs não encontrado");
         return;
     }
-
 	
-	if (trs_type === "/trf") {
-		
+	
+	
+	if (trs_type === "/trf") {		
 		
 		if(type_acc === "Investimentos"){			
 			
-			 containerWay.classList.add("show");
-
-			 containerTrf.classList.remove("show");	  
-		//	 containerPay.classList.add("show");
+			containerTrs.classList.remove("show");	  
+		
+			contentSourceText.classList.remove("show");	
+			
+			containerSourceTrs.classList.remove("show");	
+			
+			containerForward.classList.remove("show");
+											
+			containerWay.classList.add("show");
+			
+			containerPay.classList.remove("show"); 
 		 
-		     containerAccountForward.classList.add("show"); 
+		    containerAccountForward.classList.add("show"); 
 			 
 		}else{
 		
-	         containerWay.classList.add("show");	  
+			containerTrs.classList.add("show");	  
+					
+			contentSourceText.classList.add("show");	
+						
+			containerSourceTrs.classList.remove("show");	
+			
+			containerForward.classList.remove("show");
+			
+			containerWay.classList.add("show");			
+			
+			containerPay.classList.remove("show"); 
+					 
+			containerAccountForward.classList.remove("show"); 
 	  
-	         containerTrf.classList.add("show");
-			 
-	         containerPay.classList.remove("show");
-			 
-			 containerAccountForward.remove("show");	
-	  
-	   }
-	   
+	   }	   
 	  
 	}else if(trs_type === "/pay") { 
 		
 	       containerWay.classList.add("show");
 		
-      	   containerTrf.classList.remove("show");	 
+      	   containerTrs.classList.remove("show");	 
 		   
-	       containerPay.classList.add("show"); 
-	
-	}else{
-		
-	      containerWay.classList.remove("show");
-		  
-	      containerTrf.classList.remove("show");
-		  
-	      containerPay.classList.remove("show");
+	       containerPay.classList.add("show"); 	
 	}
 	
 
@@ -156,6 +174,8 @@ function onloadTrs() {
 
 	
 	
+
+
 	
 		
 	
@@ -243,8 +263,7 @@ function login(){
 
 
 
-function validateInvestment() {
-	
+function validateInvestment() {	
 	
 	let broker = frmInvestment.broker.value;
 
@@ -323,7 +342,6 @@ function validateInvestment() {
 
 
 
-
 function validateRescue(){
 		
 	let rescue  = frmRescue.rescue.value ;
@@ -373,9 +391,7 @@ function validateTrs(){
 	//document.getElementById("bank-source").textContent = bankName;
 	
 	let typeTrfOption = frmTrs.trf.value;
-	
-	
-	
+		
 	let amount = parseFloat(frmTrs.amountAcc.value); 
 	let valueTrs = parseFloat(frmTrs.trsValue.value); 
 	
@@ -386,9 +402,7 @@ function validateTrs(){
 	        frmTrs.trsValue.focus();
 	        return false;
 	 }
-		 
 		
-	 
 	 
 	if(typeTrfOption == "out") {	
 			
@@ -399,9 +413,7 @@ function validateTrs(){
 	  }	
 	
 	}	
-	
 		
-	
 		document.forms["frmTrs"].submit();
 		return true;	
 	

@@ -549,9 +549,6 @@ padding: 10px;
   background: linear-gradient(135deg,  #003b5c, #002e47, #006f91);  
 }
 
-
-
-
 #container-account{
   display: block;
   width: auto; 
@@ -571,23 +568,25 @@ padding: 10px;
 }
 
 
-
-
-#container-trs{	
-	/*
-  display: grid;
-  place-items: center;
-  width:100%; 
-  height:auto;  
-  background: linear-gradient(135deg,  #003b5c, #002e47, #006f91);*/ 
- 
-  display: block;
+#container-trs,
+#container-source-trs,
+#container-way{	
+	/*  display: grid; */    
+  background: linear-gradient(135deg,  #003b5c, #002e47, #006f91); 
+  display: none;
   width: auto; 
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   margin-bottom: 10px;
   place-items: center;
+}
+
+
+#container-trs.show,
+#container-source-trs.show,
+#container-way.show{
+	 display: block; 	
 }
 
 #content-option{
@@ -604,18 +603,10 @@ padding: 10px;
 	width: 120px;
 }
 
-#content-source-text{
-  /*
-  display: block;
-  width: auto; 
-  padding:10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  place-items: center;
-  */
-  
-  display: flex; 
+
+#content-source-text{	
+  /* place-items: center; */  
+  display: none; 
   justify-content: center; 
   width:auto;
   padding:10px;
@@ -624,16 +615,18 @@ padding: 10px;
   margin-bottom: 10px; 
 }
 
+#content-source-text.show{
+   display: flex;	
+}
+
 #content-source-text .input-group{		
   width: 40%;
   padding: 0 10px 0 0 ;
 }
 
 
-
-
 #container-forward{
-	 display: block;
+  display: none;
   width: auto; 
   padding: 10px;
   border: 1px solid #ccc;
@@ -642,18 +635,22 @@ padding: 10px;
   place-items: center;
 }
 
+#container-forward.show{
+  display: block;
+}
+
+
 #content-forward-text{
-  /*display: block;
-  width: auto; 
-  padding:10px; 
-  margin-bottom: 10px;
-  place-items: center;
-  */
-  display: flex; 
+  /* place-items: center; */
+  display: none; 
   justify-content: center; 
   width:100%;
   padding:10px; 
   margin-bottom: 10px;  
+}
+
+#content-forward-text.show{
+	display: flex; 
 }
 
 #content-forward-text .input-group{		
@@ -661,94 +658,23 @@ padding: 10px;
   padding: 0 10px 0 0 ;
 }
 
+
 #content-accounts{
-  display: block; 
+  display: none; 
   place-items: center;
- text-align:center;
+  text-align:center;
   width:100%;
   padding:10px; 
   margin-bottom: 10px; 
 }
 
+#content-accounts.show{
+  display: block; 
+}
+
 #accountSelect{
 	width: 40%;	
 }
-
-
-
-
-
-#container-account-forward{
-  display: block;
-  width: auto; 
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  
-	/*
-    display: none;       
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    */
-}
-
-/*
-#container-account-forward.show {
-	 display: block; 	
-}
-*/
-
-
-
-
-
-#container-form-trs{
-  display: block;
-  width: auto; 
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 10px;  
-}
-
-#content-form-trs, #content-form-trs-bg{
-  display: flex; 
-  justify-content: center; 
-  width:auto;  
-}
-
-#content-form-trs .input-group{		
-  width: 20%;
-  padding: 0 10px 0 0 ;
-}
-
-#content-form-trs-bg .input-group{		
-  width: 40%;
-  padding: 0 10px 0 0 ;
-}
-
-
-
-
-
-#container-btn-trs{
-  display: block;
-  width: auto; 
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 10px;	
-}
-
-.btn-group>button{	
-	width: auto;
-	height:auto;
-	padding:10px;
-}
-
 
 
 #container-pay{
@@ -766,149 +692,65 @@ padding: 10px;
 }
 
 
-
-
-
-/*
-#content-source-trf {
-    display: none;       
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-#content-source-trf.show {
-    display: flex;  
-    justify-content: space-around;  
-}
-
-#content-accounts{
-    display: none;       
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-#content-accounts.show{
-    display: block;    
-}
-
-#content-forward{
-    width: 300px;
-	padding: 0 10px 0 0 ;   
-}
-#content-forward.remove{
-	display: none; 
-}
-
 #container-account-forward{
-    display: none;       
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-#container-account-forward.show {
-	 display: block; 	
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-#container-trf,
-#container-pay,
-#container-way{
-	display: none;	 
-	padding: 10px;	
-	justify-content:space-around;
-	border: 1px solid #ccc;
-    border-radius: 5px;	 	
-}
-
-
-
-#container-trf.show,
-#container-pay.show,
-#container-way.show{
-	 display: block; 	
-}
-*/
-
-
-
-
-
-/*
-#container-account,
-#container-account-forward,
-#container-form-trs{
-  display: block;  
+  display: none;
   width: auto; 
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+#container-account-forward.show {
+	 display: block; 	
 }
 
 
+#container-form-trs{
+  display: block;
+  width: auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;  
+}
 
-#content-account,
-#container-account-forward,
 #content-form-trs,
-#container-source-bg{
+#content-form-trs-bg{
   display: flex; 
   justify-content: center; 
+  width:auto;  
 }
 
-	
-#content-source-text{ 
-   width: 300px;
-  padding: 0 10px 0 0 ; 
-}
-
-
-#container-account .input-group,
-#container-account-forward .input-group{		
-  width: 150px;
+#content-form-trs .input-group{		
+  width: 20%;
   padding: 0 10px 0 0 ;
 }
 
-#container-source .input-group{		
-  width: 200px;
-  padding: 0 10px 0 0 ;		
-}
-
-#container-source-bg .input-group{		
-	width: 300px;
-	padding: 0 10px 0 0 ;
-}	
-	
-#content-option{
-	margin: 10px;
-	padding: 10px;
-	display:flex;
-	justify-content:space-around;
-	border: 1px solid #ccc;
-    border-radius: 5px;	
+#content-form-trs-bg .input-group{		
+  width: 40%;
+  padding: 0 10px 0 0 ;
 }
 
 
-#container-forward{
-  display: flex; 
-  justify-content: center;   
+#container-btn-trs{
+  display: block;
+  width: auto; 
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;	
 }
 
 
-*/
+.btn-group>button{	
+	width: auto;
+	height:auto;
+	padding:10px;
+}
+
+
+
 
 
 

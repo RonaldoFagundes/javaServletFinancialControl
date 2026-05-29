@@ -81,8 +81,10 @@ public class Controller extends HttpServlet {
 	
 	String action ;	
 	
+	String moveType;
+	
 	boolean autoRescue = false;
-	boolean pay = false;
+	
 	
 	
 	
@@ -877,10 +879,11 @@ public class Controller extends HttpServlet {
 	
 	
 	
+	
+	
 	protected void newTransactions(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {		
-		
-		
+			
 	     int idAcc = Integer.parseInt(request.getParameter("idAcc"));		
 		 
 		 //request.setAttribute("fkbka", idAcc);     	   
@@ -893,10 +896,9 @@ public class Controller extends HttpServlet {
 	     String type = request.getParameter("type");	
 	     
 	     
-	     String bank = request.getParameter("bank");
+	     String bank = request.getParameter("bank");	     
 	     
-	     
-	    int fkBank = Integer.parseInt(request.getParameter("fkBnk"));	        
+	     int fkBank = Integer.parseInt(request.getParameter("fkBnk"));	        
 	    
 	    // dados conta selecionada 
 		request.setAttribute("trsType" , action);
@@ -904,8 +906,7 @@ public class Controller extends HttpServlet {
 		request.setAttribute("bank" , bank);
 		request.setAttribute("numberAcc" , number);
 		request.setAttribute("typeAcc" , type);
-		request.setAttribute("amountAcc" , amountAcc);
-		
+		request.setAttribute("amountAcc" , amountAcc);		
 			
 		ArrayList<AccountsModel> list = new ArrayList<>();
 		         
@@ -913,7 +914,12 @@ public class Controller extends HttpServlet {
 		request.setAttribute("accounts" , list);		
 		
 		
+	    moveType = action ;
+		
+		
 		if ("/trf".equals(action) && "Investimentos".equals(type)) {
+			
+			request.setAttribute("typeTitle" , "Transferência");
 						
 			// System.out.println("transf da conta invest para conta digital, seta os dados da conta digital ");
 			 
@@ -928,8 +934,7 @@ public class Controller extends HttpServlet {
 			 String typeForward = actm.getType();
 			 
 			 int idAcForward = actm.getId();
-			 
-			 
+			 			 
 			 request.setAttribute("idAcForward", idAcForward );
 			 request.setAttribute("numberForward", numberForward);
 			 request.setAttribute("typeForward", typeForward );
@@ -950,7 +955,11 @@ public class Controller extends HttpServlet {
 					
 		
 		
+		
+		
 		if ("/trf".equals(action) && !"Investimentos".equals(type)) {
+			
+			request.setAttribute("typeTitle" , "Transferências");
 			
 			//System.out.println("transf de outras contas, seta os dados de todas as contas");
 			
@@ -969,12 +978,11 @@ public class Controller extends HttpServlet {
 				}
 				*/			
 				
-			}
-		  	
+		   }
+		  			
 		
-		
-          if ("/pay".equals(action)) {			
-			 pay = true;			
+          if ("/pay".equals(action)) {        	  
+        	  request.setAttribute("typeTitle" , "Pagamentos");					
            }
 		
          
@@ -1078,8 +1086,7 @@ public class Controller extends HttpServlet {
 				" \n numberAcc = "+numberAcc+
 				" \n amountAcc = "+amountAcc		
 				);	
-		*/
-		
+		*/		
 					
 				//container-way
 				String form = request.getParameter("form");					
@@ -1095,15 +1102,30 @@ public class Controller extends HttpServlet {
 				String trf = request.getParameter("trf");				
 					
 				//content-source-trf
-				String source = request.getParameter("source");			
-					
-		 if( autoRescue ){
-			 
-			//container-account-forward
-				String typeForward = request.getParameter("typeForward");
-				String numberForward = request.getParameter("numberForward");
-				int idAcForward = Integer.parseInt(request.getParameter("idAcForward"));
+				String source = request.getParameter("source");
+									
+			
+		  if ("/pay".equals(moveType)) {			  
+				 
+					  System.out.println(
+								 "setar dados de saida da conta pagamentos \n "+
+								 " move = out  \n "+
+						         " data = "+trsDate+" \n "+
+						         " type = "+typeTrf+" \n "+				         
+						         " form "+form+" \n "+
+								 " desc "+desc+" \n "+
+						         " value "+strValue+" \n "+
 				
+						         " fk "+idAcc+" \n ");	
+					  
+		  }else if("/trf".equals(moveType)) {
+					
+		       if(autoRescue){
+	  		 
+		    	//container-account-forward
+				 String typeForward = request.getParameter("typeForward");
+			   	 String numberForward = request.getParameter("numberForward");
+				 int idAcForward = Integer.parseInt(request.getParameter("idAcForward"));				
 			 
 			 System.out.println(
 					 "setar dados de saida da conta origem "+typeAcc+"\n "+
@@ -1125,22 +1147,20 @@ public class Controller extends HttpServlet {
 			         " form "+form+" \n "+
 					 " desc "+desc+" \n "+
 			         " value "+strValue+" \n "+
-					 " fk "+idAcForward);				 
-		  };			 
-			  
-		  
-	    if( autoRescue == false){				 
+					 " fk "+idAcForward);		
+			 
+		       }else{				 
 				 
-		   if("out".equals(trf)) {	
-		 			
-			 if ("pessoal".equals(source)) {	
+		         if("out".equals(trf)) {	
+		        			 			
+		     	  if ("pessoal".equals(source)) {	
 				 
-			  //content-accounts
-				String idAccountSelected = request.getParameter("accountSelect");
+			     //content-accounts
+				  String idAccountSelected = request.getParameter("accountSelect");
 				
-				String bankSelected = request.getParameter("selected-bank");			
+				  String bankSelected = request.getParameter("selected-bank");			
 												
-				System.out.println(
+				  System.out.println(
 						 "setar dados de saida da conta origem "+typeAcc+" \n "+
 						 " move = "+trf+" \n "+
 				         " data = "+trsDate+" \n "+
@@ -1151,7 +1171,7 @@ public class Controller extends HttpServlet {
 				         " value "+strValue+" \n "+
 						 " fk "+idAcc+" \n ");	
 				
-				 System.out.println(
+				  System.out.println(
 						 "setar dados de entrada da conta destino "+bankSelected+"\n "+
 						 " move = "+trf+" \n "+
 				         " data"+trsDate+" \n "+
@@ -1162,7 +1182,8 @@ public class Controller extends HttpServlet {
 				         " value "+strValue+" \n "+
 						 " fk "+idAccountSelected);				 
 				 
-				   }else{				 
+				   }else if("outros".equals(source)) {	
+					   
 					   String who = request.getParameter("who");
 					   System.out.println(
 								 "setar dados de saida da conta transf para terceiros \n "+
@@ -1174,9 +1195,11 @@ public class Controller extends HttpServlet {
 								 " desc "+desc+" \n "+
 						         " value "+strValue+" \n "+
 								 " fk "+idAcc+" \n ");
-				        }			 
+				        }	
+		     	  
 				 				 
-		        }else {		        	
+		        }else if("in".equals(trf)) {
+		        	
 		        	String sourceIn = request.getParameter("sourceIn");		        	
 		        	System.out.println(
 								 "setar dados de entrada na conta transf de terceiros \\n "+
@@ -1189,24 +1212,9 @@ public class Controller extends HttpServlet {
 						         " value "+strValue+" \n "+
 								 " fk "+idAcc);			        	
 		            }		    
+		        }  	
 		  }
-		  
-		  		  
-		  
-		  
-		  if ( pay  ) {	
-			  System.out.println(
-						 "setar dados de saida da conta pagamentos \n "+
-						 " move = out  \n "+
-				         " data = "+trsDate+" \n "+
-				         " type = "+typeTrf+" \n "+				         
-				         " form "+form+" \n "+
-						 " desc "+desc+" \n "+
-				         " value "+strValue+" \n "+
-						 " fk "+idAcc+" \n ");
-		        }
-		
-		
+		    
 		
 		
 		  
