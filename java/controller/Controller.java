@@ -150,7 +150,7 @@ public class Controller extends HttpServlet {
 			     break;
 
 	       default:
-	        	home(request, response);
+	        	home(request, response);	        	
 	            //response.sendRedirect("home.jsp"); // redireciona para login se rota não reconhecida
 	            break;
 	    }
@@ -220,19 +220,19 @@ public class Controller extends HttpServlet {
 		 
 		 case  "/sqe":
 			 newTransactions(request, response);
-		 break;	
-		 			 
+		 break;			 	
+		 
 		 case  "/creatTrs":
 			 createTransactions(request, response);
-		 break;	
+		 break;			
 		 
 		 case "/ext":
 	        selectTransactions(request, response);
-	    break;
+	     break;
 		 		 
-		default:	
+		 default:	
 			response.sendRedirect("home.jsp");
-	  	break;	
+	  	 break;	
 		 
 		 }
 		 
@@ -1112,33 +1112,39 @@ public class Controller extends HttpServlet {
 								 " move = out  \n "+
 						         " data = "+trsDate+" \n "+
 						         " type = "+typeTrf+" \n "+				         
-						         " form "+form+" \n "+
-								 " desc "+desc+" \n "+
-						         " value "+strValue+" \n "+
+						         " form = "+form+" \n "+
+								 " desc = "+desc+" \n "+
+						         " value = "+strValue+" \n "+
 				
 						         " fk "+idAcc+" \n ");	
 					  
 		  }else if("/trf".equals(moveType)) {
 					
-		       if(autoRescue){
+		    if(autoRescue){
 	  		 
 		    	//container-account-forward
 				 String typeForward = request.getParameter("typeForward");
 			   	 String numberForward = request.getParameter("numberForward");
-				 int idAcForward = Integer.parseInt(request.getParameter("idAcForward"));				
+				 int idAcForward = Integer.parseInt(request.getParameter("idAcForward"));
+				 
 			 
 			 System.out.println(
+						 " moveType = "+moveType+"\n "+  
+						 " autoRescue = "+autoRescue+"\n ");	
+			
+				 
+			   System.out.println(
 					 "setar dados de saida da conta origem "+typeAcc+"\n "+
 					 " move = out \n "+
-			         " data"+trsDate+" \n "+
+			         " data "+trsDate+" \n "+
 			         " type = rescue \n "+
-					 " source Rico "+typeAcc+" \n "+
-			         " form "+form+" \n "+
-					 " desc "+desc+" \n "+
-			         " value "+strValue+" \n "+
-					 " fk "+idAcc+" \n ");				 
+					 " source Rico = "+typeAcc+" \n "+
+			         " form = "+form+" \n "+
+					 " desc = "+desc+" \n "+
+			         " value = "+strValue+" \n "+
+					 " fk = "+idAcc+" \n ");				 
 			 
-			 System.out.println(
+			    System.out.println(
 					 "setar dados de entrada da conta destino "+typeForward+"\n "+
 					 " move = "+trf+" \n "+
 			         " data"+trsDate+" \n "+
@@ -1149,12 +1155,28 @@ public class Controller extends HttpServlet {
 			         " value "+strValue+" \n "+
 					 " fk "+idAcForward);		
 			 
-		       }else{				 
+		       }else{
+		    	   
+		    	  
+		    	 System.out.println(
+					 " moveType = "+moveType+"\n "+  
+					 " autoRescue = "+autoRescue+"\n ");	
 				 
-		         if("out".equals(trf)) {	
+		    	   
+		         if("out".equals(trf)) {
+		        	 
+		        	 
+		        	 System.out.println(
+							 " trf "+trf+"\n ");	
+		        	
 		        			 			
-		     	  if ("pessoal".equals(source)) {	
-				 
+		     	   if ("pessoal".equals(source)) {	
+		     		 
+		     		
+		     		 System.out.println(
+							 " source = "+source+"\n ");
+				      
+		     		 
 			     //content-accounts
 				  String idAccountSelected = request.getParameter("accountSelect");
 				
@@ -1165,53 +1187,70 @@ public class Controller extends HttpServlet {
 						 " move = "+trf+" \n "+
 				         " data = "+trsDate+" \n "+
 				         " type = "+typeTrf+" \n "+
-				         " source "+bankSelected+" \n "+
-				         " form "+form+" \n "+
-						 " desc "+desc+" \n "+
-				         " value "+strValue+" \n "+
-						 " fk "+idAcc+" \n ");	
+				         " source = "+bankSelected+" \n "+
+				         " form = "+form+" \n "+
+						 " desc = "+desc+" \n "+
+				         " value = "+strValue+" \n "+
+						 " fk = "+idAcc+" \n ");	
 				
 				  System.out.println(
 						 "setar dados de entrada da conta destino "+bankSelected+"\n "+
 						 " move = "+trf+" \n "+
 				         " data"+trsDate+" \n "+
 				         " type = "+typeTrf+" \n "+
-						 " source "+bank+" \n "+
-				         " form "+form+" \n "+
-						 " desc "+desc+" \n "+
-				         " value "+strValue+" \n "+
-						 " fk "+idAccountSelected);				 
+						 " source = "+bank+" \n "+
+				         " form = "+form+" \n "+
+						 " desc = "+desc+" \n "+
+				         " value = "+strValue+" \n "+
+						 " fk = "+idAccountSelected);				 
 				 
 				   }else if("outros".equals(source)) {	
 					   
+					  
+					   System.out.println(
+								 " source "+source+"\n ");
+					 
+					   
+					   
 					   String who = request.getParameter("who");
+					   
+					   
 					   System.out.println(
 								 "setar dados de saida da conta transf para terceiros \n "+
 								 " move = "+trf+" \n "+
 						         " data = "+trsDate+" \n "+
 						         " type = "+typeTrf+" \n "+				         
-						         " source "+who+" \n "+
-						         " form "+form+" \n "+
-								 " desc "+desc+" \n "+
-						         " value "+strValue+" \n "+
-								 " fk "+idAcc+" \n ");
+						         " source = "+who+" \n "+
+						         " form = "+form+" \n "+
+								 " desc = "+desc+" \n "+
+						         " value = "+strValue+" \n "+
+								 " fk = "+idAcc+" \n ");
 				        }	
 		     	  
 				 				 
 		        }else if("in".equals(trf)) {
 		        	
-		        	String sourceIn = request.getParameter("sourceIn");		        	
+		        	
+		        	System.out.println(
+							 " trf "+trf+"\n ");
+		        	
+		        	
+		        	String sourceIn = request.getParameter("sourceIn");		
+		        	
+		        
 		        	System.out.println(
 								 "setar dados de entrada na conta transf de terceiros \\n "+
 								 " move = "+trf+" \n "+
 						         " data ="+trsDate+" \n "+
 						         " type ="+typeTrf+" \n "+						
 						         " origem ="+sourceIn+" \n "+
-						         " form "+form+" \n "+
-								 " desc "+desc+" \n "+
-						         " value "+strValue+" \n "+
-								 " fk "+idAcc);			        	
-		            }		    
+						         " form = "+form+" \n "+
+								 " desc = "+desc+" \n "+
+						         " value = "+strValue+" \n "+
+								 " fk = "+idAcc);	
+									        	
+		            }	
+		               
 		        }  	
 		  }
 		    
