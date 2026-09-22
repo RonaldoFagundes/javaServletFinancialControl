@@ -1,245 +1,262 @@
 <%@ page language="java"
-    contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%>
 
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="model.BankModel"%>
 
 <%
-    ArrayList<BankModel> banks =
-        (ArrayList<BankModel>) request.getAttribute("banks");
+@SuppressWarnings("unchecked")
+ArrayList<BankModel> banks =
+(ArrayList<BankModel>) request.getAttribute("banks");
+
+String contextPath = request.getContextPath();
+
+
 %>
 
-<!DOCTYPE html>
+<!DOCTYPE html> <html lang="pt-BR"> <head>
+<meta charset="UTF-8">
 
-<html lang="pt-BR">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-<head>
+<title>Meus Bancos</title>
 
-    <meta charset="UTF-8">
+<link
+    rel="stylesheet"
+    href="<%=contextPath%>/assets/css/style.css">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+<script>
+    window.contextPath = "<%=contextPath%>";
+</script>
 
-    <title>
-        Meus Bancos
-    </title>
-
-    <link
-        rel="stylesheet"
-        href="${pageContext.request.contextPath}/assets/css/style.css">
+<script
+    src="<%=contextPath%>/assets/js/script.js"
+    defer>
+</script>
 
 </head>
+ <body>
+ 
+ <header>
+ 
+   <div>
+      <h1>Meus Bancos</h1>
+  </div>
 
-<body>
-
-<header>
-
-    <div>
-
-        <h1>
-            Meus Bancos
-        </h1>
-
-    </div>
+  <div>
 
     <div>
+    
+      <span>
+        Olá, ${sessionScope.loggedUser}!
+      </span>
+    
+      <form
+         action="<%=contextPath%>/logout"
+         method="POST">
 
-        <span>
-            Olá, ${sessionScope.loggedUser}!
-        </span>
-
-        <form
-            action="${pageContext.request.contextPath}/logout"
-            method="POST">
-
-            <button type="submit">
-                Sair
-            </button>
-
-        </form>
-
+         <button
+            id="btn-default"
+            type="submit">
+            Sair
+         </button>
+      </form>
+      
     </div>
+    
+
+</div>
 
 </header>
+ <main>
+ 
+  <section>
+
+     <h2>Bancos cadastrados</h2>
+
+  </section>
 
 
-<main>
+  <section id="container-bancs">
 
-    <section>
+    <%
+        if (banks == null || banks.isEmpty()) {
+    %>
 
-        <h2>
-            Bancos cadastrados
-        </h2>
+        <p>
+            Nenhum banco cadastrado.
+        </p>
 
-    </section>
+    <%
+        } else {
+    %>
 
+        <table id="table">
 
-    <section id="container-bancs">
+            <thead>
+                <tr>
+                    <th>Logo</th>
+                    <th>Banco</th>
+                    <th>Contato</th>
+                </tr>
+            </thead>
 
-        <%
-            if (banks == null || banks.isEmpty()) {
-        %>
+            <tbody>
+            <%
+                for (BankModel bank : banks) {
 
-            <p>
-                Nenhum banco cadastrado.
-            </p>
+                    String id = String.valueOf(bank.getId());
 
-        <%
-            } else {
-        %>
+                    String img =
+                        bank.getImg() != null
+                            ? bank.getImg().trim()
+                            : "";
 
-            <table id="table">
+                    String name =
+                        bank.getName() != null
+                            ? bank.getName()
+                            : "";
 
-                <thead>
+                    String contact =
+                        bank.getContact() != null
+                            ? bank.getContact()
+                            : "";
+            %>
+                <tr>
 
-                    <tr>
+                    <!-- ==============================
+                         LOGO
+                         ============================== -->
 
-                        <th>
-                            Logo
-                        </th>
+                    <td>
+                        <a
+                            href="<%=contextPath%>/selectBank?idBnk=<%=id%>"
+                            class="bank-select"
 
-                        <th>
-                            Banco
-                        </th>
+                            data-id="<%=id%>"
 
-                        <th>
-                            Contato
-                        </th>
+                            data-img="<%=img%>"
 
-                    </tr>
+                            data-name="<%=name%>"
 
-                </thead>
-
-
-                <tbody>
-
-                <%
-                    for (BankModel bank : banks) {
-                %>
-
-                    <tr>
-
-                        <td>
-
-                            <a
-                                href="${pageContext.request.contextPath}/selectBank?idBnk=<%= bank.getId() %>"
-                                class="bank-select">
-
-                                <%
-                                    if (bank.getImg() != null &&
-                                        !bank.getImg().isEmpty()) {
-                                %>
-
-                                    <img
-                                        src="data:image/png;base64,<%= bank.getImg() %>"
-                                        alt="Logo do banco"
-                                        class="bank-img">
-
-                                <%
-                                    } else {
-                                %>
-
-                                    <span>
-                                        Sem imagem
-                                    </span>
-
-                                <%
-                                    }
-                                %>
-
-                            </a>
-
-                        </td>
-
-
-                        <td>
-
-                            <%= bank.getName() %>
-
-                        </td>
-
-
-                        <td>
+                            data-contact="<%=contact%>"
+                        >
 
                             <%
-                                if (bank.getContact() != null &&
-                                    !bank.getContact().isEmpty()) {
+                                if (!img.isEmpty()) {
                             %>
 
-                                <a
-                                    href="<%= bank.getContact() %>"
-                                    target="_blank"
-                                    rel="noopener noreferrer">
-
-                                    <%= bank.getContact() %>
-
-                                </a>
+                                <img
+                                    class="bank-logo"
+                                    src=""
+                                    alt="Logo de <%=name%>"
+                                    data-bank-image="<%=img%>"
+                                    data-bank-name="<%=name%>"
+                                >
 
                             <%
                                 } else {
                             %>
 
-                                Não informado
+                                <span>
+                                    Sem imagem
+                                </span>
 
                             <%
                                 }
                             %>
 
-                        </td>
+                        </a>
 
-                    </tr>
-
-                <%
-                    }
-                %>
-
-                </tbody>
-
-            </table>
-
-        <%
-            }
-        %>
-
-    </section>
+                    </td>
 
 
-    <section>
+                    <!-- ==============================
+                         NOME
+                         ============================== -->
 
-        <a
-            href="${pageContext.request.contextPath}/newBank"
-            id="btn-default">
+                    <td>
+                        <%=name%>
+                    </td>
 
-            Cadastrar novo banco
 
-        </a>
+                    <!-- ==============================
+                         CONTATO
+                         ============================== -->
 
-    </section>
+                    <td>
+
+                        <%
+                            if (!contact.trim().isEmpty()) {
+                        %>
+
+                            <a
+                                href="<%=contact%>"
+                                target="_blank"
+                                rel="noopener noreferrer">
+
+                                <%=contact%>
+
+                            </a>
+
+                        <%
+                            } else {
+                        %>
+
+                            Não informado
+
+                        <%
+                            }
+                        %>
+
+                    </td>
+
+                </tr>
+
+            <%
+                }
+            %>
+
+            </tbody>
+        </table>
+
+    <%
+        }
+    %>
+  </section>
+ <section>
+
+    <a
+        href="<%=contextPath%>/newBank"
+        id="btn-default">
+        Cadastrar novo banco
+    </a>
+
+</section>
 
 </main>
 
+ <footer>
+ 
+  <div>
 
-<footer>
-
-    <div>
-
-        <span>
-            Sistema de Gestão Financeira
-        </span>
-
-    </div>
-
-    <div>
-
-        <span class="version">
-            v1.5.26
-        </span>
-
-    </div>
+    <a
+        href="https://github.com/RonaldoFagundes"
+        target="_blank"
+        rel="noopener noreferrer">
+        Developed by RFagundes
+    </a>
+  </div>
+  
+ <div>
+    <span class="version">
+        v1.5.26
+    </span>
+</div>
 
 </footer>
-
-</body>
-
-</html>
+ </body>
+ </html>

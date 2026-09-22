@@ -3,24 +3,21 @@
     pageEncoding="UTF-8"%>
 
 <%@ page import="model.AccountsModel"%>
-<%@ page import="model.BankModel"%>
 <%@ page import="java.util.ArrayList"%>
 
 <%
 @SuppressWarnings("unchecked")
 ArrayList<AccountsModel> list =
-        (ArrayList<AccountsModel>) request.getAttribute("accounts");
-
-BankModel bank =
-        (BankModel) request.getAttribute("bank");
+    (ArrayList<AccountsModel>) request.getAttribute("accounts");
 
 if (list == null) {
-    list = new ArrayList<>();
+    list = new ArrayList<AccountsModel>();
 }
+
+String contextPath = request.getContextPath();
 %>
 
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
 <head>
@@ -52,60 +49,69 @@ if (list == null) {
 
 <header>
 
-    <div class="bank-header">
+    <!-- =====================================================
+         BANCO - CARREGADO PELO LOCALSTORAGE
+         ===================================================== -->
 
-        <% if (bank != null) { %>
+    <div
+        class="bank-header"
+        id="bank-header">
 
-            <% if (bank.getImg() != null &&
-                   !bank.getImg().trim().isEmpty()) { %>
+        <div class="bank-header-content">
 
-                <img
-                    id="bank-img"
-                    src="data:image/png;base64,<%=bank.getImg()%>"
-                    alt="<%=bank.getName()%>"
-                    class="bank-img">
-
-            <% } %>
-
-            <span id="bank-name">
-                <%=bank.getName()%>
-            </span>
-
-        <% } else { %>
+            <img
+                id="bank-img"
+                src=""
+                alt="Logo do banco"
+                class="bank-img"
+                style="display:none;">
 
             <span id="bank-name">
-                Banco não encontrado
+                Banco
             </span>
 
-        <% } %>
+        </div>
 
     </div>
 
 
+    <!-- =====================================================
+         BOTÕES
+         ===================================================== -->
+
     <div id="container-btn">
 
-        <a
-            href="${pageContext.request.contextPath}/main"
-            id="btn-default">
+        <div>
 
-            Início
-
-        </a>
-
-        <form
-            action="${pageContext.request.contextPath}/logout"
-            method="POST"
-            style="display:inline;">
-
-            <button
-                type="submit"
+            <a
+                href="<%=contextPath%>/main"
                 id="btn-default">
 
-                Sair
+                Início
 
-            </button>
+            </a>
 
-        </form>
+        </div>
+
+
+        <div>
+
+            <form
+                action="<%=contextPath%>/logout"
+                method="POST"
+                style="display:inline;">
+
+                <button
+                    type="submit"
+                    id="btn-default">
+
+                    Sair
+
+                </button>
+
+            </form>
+
+        </div>
 
     </div>
 
@@ -114,38 +120,58 @@ if (list == null) {
 
 <main>
 
+
+    <!-- =====================================================
+         BANCO SELECIONADO
+         ===================================================== -->
+
     <input
         type="hidden"
         name="bank-source"
         id="bank-source"
-        value="<%=bank != null ? bank.getName() : ""%>">
+        value="">
 
+
+    <!-- =====================================================
+         SELEÇÃO DE CONTA
+         ===================================================== -->
 
     <div class="account-select-container">
 
         <label for="accountSelect">
+
             Escolha uma Conta:
+
         </label>
 
 
         <select id="accountSelect">
 
             <option value="">
+
                 -- Selecionar --
+
             </option>
 
 
             <%
+
             for (AccountsModel acc : list) {
+
             %>
 
                 <option
+
                     value="<%=acc.getId()%>"
-                    data-bank="<%=bank != null ? bank.getName() : ""%>"
+
                     data-number="<%=acc.getNumber()%>"
+
                     data-type="<%=acc.getType()%>"
+
                     data-amount="<%=acc.getBalance()%>"
-                    data-fk="<%=acc.getFkbnk()%>">
+
+                    data-fk="<%=acc.getFkbnk()%>"
+                >
 
                     <%=acc.getNumber()%>
                     -
@@ -153,8 +179,11 @@ if (list == null) {
 
                 </option>
 
+
             <%
+
             }
+
             %>
 
         </select>
@@ -162,10 +191,19 @@ if (list == null) {
     </div>
 
 
+    <!-- =====================================================
+         DETALHES DA CONTA
+         ===================================================== -->
+
     <div id="accountDetails"></div>
 
 
-    <div id="container-sevice"></div>
+    <!-- =====================================================
+         SERVIÇOS
+         ===================================================== -->
+
+    <div id="container-service"></div>
+
 
 </main>
 
@@ -179,21 +217,25 @@ if (list == null) {
             target="_blank"
             rel="noopener noreferrer">
 
-            Desenvolvido por RFagundes
+            Developed by RFagundes
 
         </a>
 
     </div>
 
+
     <div>
 
         <span class="version">
+
             v1.5.26
+
         </span>
 
     </div>
 
 </footer>
+
 
 </body>
 

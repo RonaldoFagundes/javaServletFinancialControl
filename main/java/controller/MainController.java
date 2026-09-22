@@ -29,16 +29,10 @@ public class MainController extends HttpServlet {
         /*
          * Verifica se o usuário está logado.
          */
-        HttpSession session =
-                request.getSession(false);
+        HttpSession session =  request.getSession(false);
 
-        if (session == null ||
-            session.getAttribute("loggedUser") == null) {
-
-            response.sendRedirect(
-                    request.getContextPath() + "/login"
-            );
-
+        if (session == null || session.getAttribute("loggedUser") == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
@@ -46,8 +40,7 @@ public class MainController extends HttpServlet {
         /*
          * Busca os bancos cadastrados.
          */
-        ArrayList<BankModel> banks =
-                bankDao.listBanks();
+        ArrayList<BankModel> banks =  bankDao.listBanks();
 
 
         /*
@@ -61,10 +54,7 @@ public class MainController extends HttpServlet {
         /*
          * Envia os bancos para o JSP.
          */
-        request.setAttribute(
-                "banks",
-                banks
-        );
+        request.setAttribute("banks",banks);
 
 
         /*

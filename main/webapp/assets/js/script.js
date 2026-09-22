@@ -1,19 +1,253 @@
 "use strict";
 
-
 /* =========================================================
    INICIALIZAÇÃO
    ========================================================= */
 
 document.addEventListener("DOMContentLoaded", function () {
-
+    setupBankSelection();
     setupAccountSelect();
-
     setupSelectAccountLinks();
-
+    setupRescueModal();
     onloadData();
-
+    loadBankInTransferPage();
+    loadBankLogos();
 });
+
+
+
+
+function loadBankLogos() {
+
+    var images = document.querySelectorAll(
+        ".bank-logo[data-bank-image]"
+    );
+
+    if (!images || images.length === 0) {
+        return;
+    }
+
+    images.forEach(function (imgElement) {
+
+        var imgData = imgElement.getAttribute(
+            "data-bank-image"
+        ) || "";
+
+        var bankName = imgElement.getAttribute(
+            "data-bank-name"
+        ) || "Banco";
+
+        if (!imgData.trim()) {
+            return;
+        }
+
+        setBankImage(
+            imgElement,
+            imgData,
+            bankName
+        );
+    });
+
+}
+
+
+
+/* =========================================================
+   SELEÇÃO DO BANCO NO MAIN.JSP
+   ========================================================= */
+
+function setupBankSelection() {
+
+    var banks = document.querySelectorAll(".bank-select");
+
+    if (!banks || banks.length === 0) {
+        return;
+    }
+
+
+    banks.forEach(function (bankElement) {
+
+        bankElement.addEventListener(
+            "click",
+            function (event) {
+
+                /*
+                 * Impede a navegação momentaneamente.
+                 *
+                 * Primeiro salvamos o banco.
+                 * Depois fazemos a navegação.
+                 */
+
+                event.preventDefault();
+
+
+                var id = bankElement.getAttribute(
+                    "data-id"
+                ) || "";
+
+
+                var img = bankElement.getAttribute(
+                    "data-img"
+                ) || "";
+
+
+                var name =
+                    bankElement.getAttribute(
+                        "data-name"
+                    ) || "";
+
+
+                var contact =
+                    bankElement.getAttribute(
+                        "data-contact"
+                    ) || "";
+
+
+                /*
+                 * Salva banco no localStorage.
+                 */
+
+                storeBankData(
+                    id,
+                    img,
+                    name,
+                    contact
+                );
+
+
+                /*
+                 * Recupera o endereço do link.
+                 */
+
+                var url = bankElement.getAttribute("href");
+
+
+                /*
+                 * Só navega depois de salvar.
+                 */
+
+                if (url) {
+
+                    window.location.href =
+                        url;
+
+                }
+
+            }
+        );
+
+    });
+
+}
+
+
+
+
+
+
+/* =========================================================
+   BANCO NA PÁGINA DE TRANSFERÊNCIA
+   ========================================================= */
+
+function loadBankInTransferPage() {
+
+    var bank =
+        getStoredBankData();
+
+    if (!bank) {
+
+        console.warn(
+            "Nenhum banco selecionado no localStorage."
+        );
+
+        return;
+    }
+
+
+    var name =
+        document.getElementById(
+            "transfer-bank-name"
+        );
+
+    var img =
+        document.getElementById(
+            "transfer-bank-img"
+        );
+
+
+    if (name) {
+
+        name.textContent =
+            bank.name || "Banco";
+
+    }
+
+
+    if (
+        img &&
+        bank.img
+    ) {
+
+        setBankImage(
+            img,
+            bank.img,
+            bank.name
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CARREGA BANCO SELECIONADO
+   ========================================================= */
+
+function loadSelectedBank() {
+
+    var bank =
+        getStoredBankData();
+
+    if (!bank) {
+        return null;
+    }
+
+
+    var bankName =
+        document.getElementById(
+            "bank-name"
+        );
+
+    var bankImg =
+        document.getElementById(
+            "bank-img"
+        );
+
+
+    if (bankName) {
+
+        bankName.textContent =
+            bank.name || "Banco";
+
+    }
+
+
+    if (
+        bankImg &&
+        bank.img
+    ) {
+
+        setBankImage(
+            bankImg,
+            bank.img,
+            bank.name
+        );
+
+    }
+
+
+    return bank;
+}
 
 
 /* =========================================================
@@ -101,6 +335,7 @@ var serviceMap = {
             move: "sqe"
         }
     ]
+
 };
 
 
@@ -111,133 +346,89 @@ var serviceMap = {
 function setupAccountSelect() {
 
     var select =
-        document.getElementById("accountSelect");
+        document.getElementById(
+            "accountSelect"
+        );
 
     if (!select) {
         return;
     }
 
-    select.addEventListener("change", function (event) {
 
-        var option =
-            event.target.options[
-                event.target.selectedIndex
-            ];
-
-        if (!option || !option.value) {
-            clearAccountScreen();
-            return;
-        }
-
-        var id =
-            option.value;
-
-        var bank =
-            option.getAttribute("data-bank") || "";
-
-        var number =
-            option.getAttribute("data-number") || "";
-
-        var type =
-            option.getAttribute("data-type") || "";
-
-        var amount =
-            option.getAttribute("data-amount") || "0";
-
-        var fk =
-            option.getAttribute("data-fk") || "";
-
-
-        renderAccountCard(
-            number,
-            type,
-            amount
-        );
-
-
-        renderServices(
-            type,
-            id,
-            amount,
-            bank,
-            number,
-            fk
-        );
-
-    });
-}
-
-
-/* =========================================================
-   LIMPA A TELA DA CONTA
-   ========================================================= */
-
-function clearAccountScreen() {
-
-    var details =
-        document.getElementById("accountDetails");
-
-    if (details) {
-        details.innerHTML = "";
-    }
-
-
-    var services =
-        document.getElementById("container-service");
-
-    if (!services) {
-
-        services =
-            document.getElementById(
-                "container-sevice"
-            );
-    }
-
-    if (services) {
-        services.innerHTML = "";
-    }
-}
-
-
-/* =========================================================
-   LINKS PARA SELEÇÃO DE CONTA
-   ========================================================= */
-
-function setupSelectAccountLinks() {
-
-    document.addEventListener(
-        "click",
+    select.addEventListener(
+        "change",
         function (event) {
 
-            var element =
-                event.target.closest(
-                    ".selectAccount"
-                );
+            var option =
+                event.target.options[
+                event.target.selectedIndex
+                ];
 
-            if (!element) {
+
+            if (
+                !option ||
+                !option.value
+            ) {
+
+                clearAccountScreen();
+
                 return;
             }
 
-            event.preventDefault();
-
 
             var id =
-                element.getAttribute("data-id");
+                option.value;
 
-            var bank =
-                element.getAttribute("data-bank") || "";
 
             var number =
-                element.getAttribute("data-number") || "";
+                option.getAttribute(
+                    "data-number"
+                ) || "";
+
 
             var type =
-                element.getAttribute("data-type") || "";
+                option.getAttribute(
+                    "data-type"
+                ) || "";
+
 
             var amount =
-                element.getAttribute("data-amount") || "0";
+                option.getAttribute(
+                    "data-amount"
+                ) || "0";
+
 
             var fk =
-                element.getAttribute("data-fk") || "";
+                option.getAttribute(
+                    "data-fk"
+                ) || "";
+
+
+            /*
+             * IMPORTANTE:
+             *
+             * O banco NÃO vem mais
+             * da option.
+             *
+             * Ele vem do localStorage.
+             */
+
+            var selectedBank =
+                getStoredBankData();
+
+
+            if (!selectedBank) {
+
+                console.warn(
+                    "Nenhum banco encontrado no localStorage."
+                );
+
+                return;
+            }
+
+
+            var bank =
+                selectedBank.name || "";
 
 
             renderAccountCard(
@@ -258,6 +449,160 @@ function setupSelectAccountLinks() {
 
         }
     );
+
+}
+
+
+/* =========================================================
+   LIMPA TELA DA CONTA
+   ========================================================= */
+
+function clearAccountScreen() {
+
+    var details =
+        document.getElementById(
+            "accountDetails"
+        );
+
+
+    if (details) {
+
+        details.innerHTML =
+            "";
+
+    }
+
+
+    var services =
+        document.getElementById(
+            "container-service"
+        );
+
+
+    if (!services) {
+
+        services =
+            document.getElementById(
+                "container-sevice"
+            );
+
+    }
+
+
+    if (services) {
+
+        services.innerHTML =
+            "";
+
+    }
+
+}
+
+
+/* =========================================================
+   LINKS DE SELEÇÃO DE CONTA
+   ========================================================= */
+
+function setupSelectAccountLinks() {
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                !event.target.closest
+            ) {
+
+                return;
+
+            }
+
+
+            var element =
+                event.target.closest(
+                    ".selectAccount"
+                );
+
+
+            if (!element) {
+                return;
+            }
+
+
+            event.preventDefault();
+
+
+            var id =
+                element.getAttribute(
+                    "data-id"
+                ) || "";
+
+
+            var number =
+                element.getAttribute(
+                    "data-number"
+                ) || "";
+
+
+            var type =
+                element.getAttribute(
+                    "data-type"
+                ) || "";
+
+
+            var amount =
+                element.getAttribute(
+                    "data-amount"
+                ) || "0";
+
+
+            var fk =
+                element.getAttribute(
+                    "data-fk"
+                ) || "";
+
+
+            /*
+             * Banco vem do localStorage.
+             */
+
+            var selectedBank =
+                getStoredBankData();
+
+
+            if (!selectedBank) {
+
+                console.warn(
+                    "Nenhum banco encontrado no localStorage."
+                );
+
+                return;
+            }
+
+
+            var bank =
+                selectedBank.name || "";
+
+
+            renderAccountCard(
+                number,
+                type,
+                amount
+            );
+
+
+            renderServices(
+                type,
+                id,
+                amount,
+                bank,
+                number,
+                fk
+            );
+
+        }
+    );
+
 }
 
 
@@ -276,36 +621,50 @@ function renderAccountCard(
             "accountDetails"
         );
 
+
     if (!container) {
         return;
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     var card =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     card.className =
         "account-card";
 
 
     var title =
-        document.createElement("h3");
+        document.createElement(
+            "h3"
+        );
+
 
     title.className =
         "account-title";
+
 
     title.textContent =
         "Detalhes da Conta";
 
 
-    card.appendChild(title);
+    card.appendChild(
+        title
+    );
 
 
     var info =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     info.className =
         "account-info";
@@ -332,53 +691,72 @@ function renderAccountCard(
        ===================================================== */
 
     var balanceRow =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     balanceRow.className =
         "account-row";
 
 
     var balanceLabel =
-        document.createElement("span");
+        document.createElement(
+            "span"
+        );
+
 
     balanceLabel.className =
         "account-label";
+
 
     balanceLabel.textContent =
         "Saldo:";
 
 
     var valueSpan =
-        document.createElement("span");
+        document.createElement(
+            "span"
+        );
+
 
     valueSpan.className =
         "account-value amount-value";
+
 
     valueSpan.setAttribute(
         "data-hidden",
         "true"
     );
 
+
     valueSpan.textContent =
         "••••••";
 
 
     var toggle =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
+
 
     toggle.type =
         "button";
 
+
     toggle.className =
         "toggle-amount";
 
+
     toggle.title =
         "Mostrar/ocultar saldo";
+
 
     toggle.setAttribute(
         "aria-label",
         "Mostrar ou ocultar saldo"
     );
+
 
     toggle.textContent =
         "👁️";
@@ -388,9 +766,11 @@ function renderAccountCard(
         balanceLabel
     );
 
+
     balanceRow.appendChild(
         valueSpan
     );
+
 
     balanceRow.appendChild(
         toggle
@@ -413,106 +793,87 @@ function renderAccountCard(
 
 
     var formattedAmount =
-        formatCurrency(amount);
+        formatCurrency(
+            amount
+        );
 
 
     /* =====================================================
        MOSTRAR / OCULTAR SALDO
        ===================================================== */
 
-    function toggleAmount() {
-
-        var hidden =
-            valueSpan.getAttribute(
-                "data-hidden"
-            );
-
-
-        if (hidden === "true") {
-
-            valueSpan.textContent =
-                formattedAmount;
-
-            valueSpan.setAttribute(
-                "data-hidden",
-                "false"
-            );
-
-            toggle.textContent =
-                "🙈";
-
-        } else {
-
-            valueSpan.textContent =
-                "••••••";
-
-            valueSpan.setAttribute(
-                "data-hidden",
-                "true"
-            );
-
-            toggle.textContent =
-                "👁️";
-        }
-    }
-
-
     toggle.addEventListener(
         "click",
-        toggleAmount
+        function () {
+
+            var hidden =
+                valueSpan.getAttribute(
+                    "data-hidden"
+                );
+
+
+            if (
+                hidden === "true"
+            ) {
+
+                valueSpan.textContent =
+                    formattedAmount;
+
+
+                valueSpan.setAttribute(
+                    "data-hidden",
+                    "false"
+                );
+
+
+                toggle.textContent =
+                    "◉̸";
+
+            } else {
+
+                valueSpan.textContent =
+                    "••••••";
+
+
+                valueSpan.setAttribute(
+                    "data-hidden",
+                    "true"
+                );
+
+
+                toggle.textContent =
+                    "👁️";
+
+            }
+
+        }
     );
+
 }
 
 
 /* =========================================================
-   CRIA LINHA DE INFORMAÇÃO
+   CRIA LINHA
    ========================================================= */
 
-function createRowElement(
-    label,
-    value
-) {
+function createRowElement(label,value) {
 
-    var row =
-        document.createElement("div");
+    var row = document.createElement("div");
+    row.className = "account-row";
 
-    row.className =
-        "account-row";
-
-
-    var labelElement =
-        document.createElement("span");
-
-    labelElement.className =
-        "account-label";
-
-    labelElement.textContent =
-        label + ":";
-
-
-    var valueElement =
-        document.createElement("span");
-
-    valueElement.className =
-        "account-value";
-
-    valueElement.textContent =
-        value !== null &&
-        typeof value !== "undefined"
+    var labelElement = document.createElement("span");
+    labelElement.className = "account-label";
+    labelElement.textContent = label + ":";
+    var valueElement = document.createElement("span");
+    valueElement.className ="account-value";
+    valueElement.textContent = value !== null && typeof value !== "undefined"
             ? String(value)
             : "";
 
-
-    row.appendChild(
-        labelElement
-    );
-
-    row.appendChild(
-        valueElement
-    );
-
-
+    row.appendChild(labelElement);
+    row.appendChild(valueElement);
     return row;
+
 }
 
 
@@ -527,127 +888,56 @@ function createPostLink(
     disabled
 ) {
 
-    var link =
-        document.createElement("a");
-
-
-    link.textContent =
-        label;
-
-
-    link.href =
-        "#";
-
-
+    var link = document.createElement("a");
+    link.textContent = label;
+    link.href = "#";
     if (disabled) {
-
-        link.className =
-            "link-desabilitado";
-
-        link.setAttribute(
-            "aria-disabled",
-            "true"
-        );
-
+        link.className = "link-desabilitado";
+        link.setAttribute( "aria-disabled", "true");
         return link;
     }
 
-
-    link.className =
-        "service-card";
-
-
+    link.className = "service-card";
     link.addEventListener(
         "click",
         function (event) {
-
             event.preventDefault();
-
-            submitPost(
-                move,
-                data
-            );
-
+            submitPost( move, data);
         }
     );
-
-
     return link;
 }
 
 
 /* =========================================================
-   ENVIA POST PARA O CONTROLLER
+   ENVIA POST PARA CONTROLLER
    ========================================================= */
 
-function submitPost(
-    action,
-    data
-) {
+function submitPost(action, data) {
 
-    var form =
-        document.createElement("form");
+    var contextPath = getContextPath();
+    var form = document.createElement("form");
+    form.method = "POST";
+    form.action = contextPath +"/" + action;
 
+    for (var key in data ) {
 
-    form.method =
-        "POST";
-
-
-    form.action =
-        getContextPath() +
-        "/" +
-        action;
-
-
-    for (
-        var key in data
-    ) {
-
-        if (
-            !Object.prototype.hasOwnProperty.call(
-                data,
-                key
-            )
-        ) {
+        if (!Object.prototype.hasOwnProperty.call(data,key)) {
             continue;
         }
 
-
-        if (
-            data[key] === null ||
-            typeof data[key] === "undefined"
-        ) {
+        if (data[key] === null || typeof data[key] === "undefined") {
             continue;
         }
 
-
-        var input =
-            document.createElement("input");
-
-
-        input.type =
-            "hidden";
-
-
-        input.name =
-            key;
-
-
-        input.value =
-            String(data[key]);
-
-
-        form.appendChild(
-            input
-        );
+        var input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = String(data[key]);
+        form.appendChild(input);
     }
 
-
-    document.body.appendChild(
-        form
-    );
-
-
+    document.body.appendChild(form);
     form.submit();
 }
 
@@ -665,107 +955,45 @@ function renderServices(
     fk
 ) {
 
-    var limite =
-        1000;
+    var limite = 1000;
 
+    var saldo = parseMoney(amount);
 
-    var saldo =
-        parseMoney(amount);
-
-
-    /* =====================================================
-       LOCALIZA O CONTAINER
-       ===================================================== */
-
-    var container =
-        document.getElementById(
-            "container-service"
-        );
-
-
-    /*
-     * Compatibilidade com o nome antigo:
-     * container-sevice
-     */
-
+    var container = document.getElementById("container-service");
     if (!container) {
-
-        container =
-            document.getElementById(
-                "container-sevice"
-            );
+        container = document.getElementById("container-sevice");
     }
-
 
     if (!container) {
         return;
     }
 
+    container.innerHTML = "";
 
-    container.innerHTML =
-        "";
-
-
-    var services =
-        serviceMap[type] || [];
-
+    var services = serviceMap[type] || [];
 
     if (services.length === 0) {
-
-        var message =
-            document.createElement("p");
-
-        message.textContent =
-            "Nenhum serviço disponível para este tipo de conta.";
-
-        container.appendChild(
-            message
-        );
-
+        var message = document.createElement("p");
+        message.textContent = "Nenhum serviço disponível para este tipo de conta.";
+        container.appendChild(message);
         return;
     }
 
+    var wrapper = document.createElement("div");
+    wrapper.className = "services-container";
 
-    var wrapper =
-        document.createElement("div");
-
-    wrapper.className =
-        "services-container";
-
-
-    for (
-        var i = 0;
-        i < services.length;
-        i++
-    ) {
-
-        var service =
-            services[i];
-
-
-        var label =
-            service.label;
-
-
-        var move =
-            service.move;
-
-
-        var disabled =
-            false;
-
+    for (var i = 0; i < services.length; i++ ) {
+        var service = services[i];
+        var label = service.label;
+        var move = service.move;
+        var disabled =false;
 
         /* =================================================
            APLICAÇÃO
            ================================================= */
 
-        if (
-            move === "newInvest" &&
-            saldo < limite
-        ) {
-
-            disabled =
-                true;
+        if ( move === "newInvest" && saldo < limite) {
+            disabled = true;
         }
 
 
@@ -773,58 +1001,37 @@ function renderServices(
            TRANSFERÊNCIA / PAGAMENTO / SAQUE
            ================================================= */
 
-        if (
-            (
-                move === "trf" ||
+        if ((   move === "trf" ||
                 move === "pay" ||
-                move === "sqe"
-            ) &&
-            saldo <= 0
-        ) {
-
-            disabled =
-                true;
+                move === "sqe" ) && saldo <= 0) {
+            disabled = true;
         }
 
 
         /* =================================================
-           DADOS PARA O CONTROLLER
+           DADOS
            ================================================= */
 
         var data = {
-
             idAcc: id,
-
             bank: bank,
-
             number: number,
-
             type: type,
-
             fkBnk: fk
-
         };
 
-
-        /* =================================================
-           SERVIÇOS QUE RECEBEM SALDO
-           ================================================= */
 
         if (
             move === "trf" ||
             move === "pay" ||
             move === "sqe" ||
             move === "newInvest" ||
-            move === "readInvest"
-        ) {
-
-            data.amount =
-                saldo;
+            move === "readInvest" ) {
+            data.amount = saldo;
         }
 
 
-        var link =
-            createPostLink(
+        var link = createPostLink(
                 label,
                 move,
                 data,
@@ -832,42 +1039,9 @@ function renderServices(
             );
 
 
-        wrapper.appendChild(
-            link
-        );
+        wrapper.appendChild(link);
     }
-
-
-    container.appendChild(
-        wrapper
-    );
-}
-
-
-/* =========================================================
-   COMPATIBILIDADE COM FUNÇÃO ANTIGA
-   ========================================================= */
-
-function createRow(
-    label,
-    value
-) {
-
-    return (
-
-        '<div class="account-row">' +
-
-            '<span class="account-label">' +
-                escapeHtml(label) +
-                ':' +
-            '</span>' +
-
-            '<span class="account-value">' +
-                escapeHtml(value) +
-            '</span>' +
-
-        '</div>'
-    );
+       container.appendChild(wrapper);
 }
 
 
@@ -877,101 +1051,53 @@ function createRow(
 
 function parseMoney(value) {
 
-    if (
-        value === null ||
-        typeof value === "undefined"
-    ) {
-
+    if (value === null || typeof value === "undefined" ) {
         return 0;
     }
 
-
-    var text =
-        String(value).trim();
-
-
+    var text = String(value).trim();
     if (!text) {
         return 0;
     }
 
+    text = text.replace(/R\$/gi,"");
+    text = text.replace(/\s/g,"");
 
     /*
-     * Trata valores brasileiros:
-     *
      * 1.000,50
-     * 1000,50
-     * R$ 1.000,50
      */
 
-    text =
-        text.replace(
-            /R\$/g,
-            ""
-        );
+    if (text.indexOf(".") !== -1 &&
+        text.indexOf(",") !== -1 ) {
 
-
-    text =
-        text.replace(
-            /\s/g,
-            ""
-        );
-
-
-    /*
-     * Se possui ponto e vírgula,
-     * assume formato brasileiro.
-     */
-
-    if (
-        text.indexOf(".") !== -1 &&
-        text.indexOf(",") !== -1
-    ) {
-
-        text =
-            text.replace(
-                /\./g,
-                ""
-            );
-
-        text =
-            text.replace(
-                ",",
-                "."
-            );
-
-    } else if (
-        text.indexOf(",") !== -1
-    ) {
-
-        text =
-            text.replace(
-                ",",
-                "."
-            );
+        text = text.replace(/\./g, "");
+        text = text.replace(",",".");
     }
 
+    /*
+     * 1000,50
+     */
 
-    var number =
-        parseFloat(text);
+    else if (text.indexOf(",") !== -1) {
+        text = text.replace(",",".");
+    }
 
+    var number = parseFloat(text);
 
     return isNaN(number)
         ? 0
         : number;
+
 }
 
 
 /* =========================================================
-   FORMATA VALOR EM REAIS
+   FORMATA MOEDA
    ========================================================= */
 
-function formatCurrency(
-    value
-) {
+function formatCurrency(value){
 
-    var number =
-        parseMoney(value);
-
+    var number = parseMoney(value);
 
     return number.toLocaleString(
         "pt-BR",
@@ -984,7 +1110,7 @@ function formatCurrency(
 
 
 /* =========================================================
-   LOCAL STORAGE - BANCO
+   LOCAL STORAGE - SALVA BANCO
    ========================================================= */
 
 function storeBankData(
@@ -995,148 +1121,299 @@ function storeBankData(
 ) {
 
     var bankData = {
-
-        id: id,
-
+        id: id || "",
         img: img || "",
-
         name: name || "",
-
         contact: contact || ""
-
     };
 
 
     try {
-
-        localStorage.setItem(
-            "selectedBank",
-            JSON.stringify(bankData)
-        );
-
+        localStorage.setItem("selectedBank",JSON.stringify(bankData));
+        console.log("Banco salvo no localStorage:",bankData);
     } catch (error) {
-
-        console.error(
-            "Não foi possível salvar o banco:",
-            error
-        );
+        console.error("Erro ao salvar banco:",error);
     }
+
 }
 
 
 /* =========================================================
-   RECUPERA BANCO DO LOCAL STORAGE
+   LOCAL STORAGE - RECUPERA BANCO
    ========================================================= */
 
 function getStoredBankData() {
 
     try {
-
-        var bankData =
-            localStorage.getItem(
-                "selectedBank"
-            );
-
+        var bankData = localStorage.getItem("selectedBank");
 
         if (!bankData) {
             return null;
         }
 
+        var bank = JSON.parse(bankData);
 
-        return JSON.parse(
-            bankData
-        );
+        if (!bank ||typeof bank !== "object") {
+            return null;
+        }
+
+        return bank;
 
     } catch (error) {
 
-        console.error(
-            "Erro ao ler selectedBank:",
-            error
-        );
-
+        console.error("Erro ao ler selectedBank:",error);
         return null;
     }
+
 }
 
 
 /* =========================================================
-   CARREGA DADOS DO BANCO
+   CONFIGURA IMAGEM DO BANCO
+   ========================================================= */
+
+function setBankImage(
+    imgElement,
+    imgData,
+    bankName
+) {
+
+    if (!imgElement) {
+        return false;
+    }
+
+
+    if (imgData === null || typeof imgData === "undefined") {
+        imgElement.style.display = "none";
+        return false;
+    }
+
+
+    var src = String(imgData).trim();
+
+    if (!src) {
+        imgElement.style.display = "none";
+        return false;
+    }
+
+
+    /*
+     * Remove espaços e quebras
+     * somente quando for Base64 puro.
+     */
+
+    src = src.replace(/\s/g, "");
+
+
+    /*
+     * ============================================
+     * DATA URI
+     * ============================================
+     *
+     * Exemplo:
+     *
+     * data:image/png;base64,AAAA...
+     *
+     * data:image/jpeg;base64,AAAA...
+     */
+
+    if (src.indexOf("data:image/") === 0) {
+        imgElement.src = src;
+    }
+
+
+    /*
+     * ============================================
+     * URL HTTP/HTTPS
+     * ============================================
+     */
+
+    else if (
+        src.indexOf("http://") === 0 ||
+        src.indexOf("https://") === 0
+    ) {
+        imgElement.src = src;
+
+    }
+
+
+    /*
+     * ============================================
+     * CAMINHO
+     * ============================================
+     */
+
+    else if (
+        src.indexOf("/") === 0 ||
+        src.indexOf("./") === 0 ||
+        src.indexOf("../") === 0
+    ) {
+        imgElement.src = src;
+    }
+
+
+    /*
+     * ============================================
+     * BASE64 PURO
+     * ============================================
+     */
+
+    else {
+        /*
+         * JPEG
+         */
+
+        if (src.indexOf("/9j/") === 0){
+            imgElement.src ="data:image/jpeg;base64," + src;
+        }
+
+
+        /*
+         * PNG
+         *
+         * Base64 PNG normalmente começa
+         * com iVBORw0KGgo
+         */
+
+        else if ( src.indexOf("iVBORw0KGgo") === 0 ) {
+            imgElement.src = "data:image/png;base64," +src;
+        }
+
+        /*
+         * GIF
+         */
+
+        else if (src.indexOf("R0lGOD") === 0) {
+            imgElement.src ="data:image/gif;base64," + src;
+        }
+
+
+        /*
+         * WebP
+         *
+         * Dependendo de como o Base64 foi
+         * gerado, pode ser necessário tratar
+         * especificamente no backend.
+         */
+
+        else {
+            /*
+             * Mantém PNG como fallback.
+             */
+            imgElement.src =  "data:image/png;base64," + src;
+
+        }
+
+    }
+
+
+    imgElement.alt = bankName || "Banco";
+
+    /*
+     * ============================================
+     * EVENTO DE ERRO
+     * ============================================
+     */
+
+    imgElement.onerror =  function () {
+            console.error("Erro ao carregar imagem do banco:",bankName);
+            console.error("Imagem recebida:",imgData);
+            imgElement.style.display = "none";
+        };
+
+
+    /*
+     * ============================================
+     * EVENTO DE SUCESSO
+     * ============================================
+     */
+
+    imgElement.onload = function () {
+            imgElement.style.display = "block";
+        };
+
+
+    /*
+     * Caso a imagem já esteja em cache,
+     * o onload pode já ter ocorrido.
+     */
+
+    if (imgElement.complete) {
+        if (imgElement.naturalWidth > 0 ) {
+            imgElement.style.display = "block";
+        }
+    }
+
+    return true;
+}
+
+
+
+/* =========================================================
+   CARREGA BANCO DO LOCALSTORAGE NA PÁGINA
    ========================================================= */
 
 function onloadData() {
 
-    var bank =
-        getStoredBankData();
+    var bankName = document.getElementById("bank-name");
+    var bankImg = document.getElementById("bank-img");
+    var bankSource = document.getElementById("bank-source");
+    /*
+     * Página não possui elementos de banco.
+     */
 
-
-    if (!bank) {
+    if (
+        !bankName &&
+        !bankImg &&
+        !bankSource
+    ) {
         return;
     }
 
 
-    var bankName =
-        document.getElementById(
-            "bank-name"
-        );
+    /*
+     * Recupera banco.
+     */
+
+    var bank = getStoredBankData();
+    if (!bank) {
+        console.warn( "selectedBank não encontrado no localStorage.");
+        return;
+    }
 
 
-    var bankImg =
-        document.getElementById(
-            "bank-img"
-        );
-
-
-    var bankSource =
-        document.getElementById(
-            "bank-source"
-        );
-
+    /*
+     * Nome.
+     */
 
     if (bankName) {
+        bankName.textContent = bank.name || "Banco";
+    }
 
-        bankName.textContent =
-            bank.name || "";
+    /*
+     * Imagem.
+     */
+
+    if (bankImg && bank.img ) {
+        setBankImage(
+            bankImg,
+            bank.img,
+            bank.name
+        );
     }
 
 
-    if (
-        bankImg &&
-        bank.img
-    ) {
-
-        /*
-         * Verifica se a imagem já é
-         * uma URL ou Base64.
-         */
-
-        if (
-            bank.img.indexOf(
-                "data:image"
-            ) === 0
-        ) {
-
-            bankImg.src =
-                bank.img;
-
-        } else {
-
-            bankImg.src =
-                "data:image/png;base64," +
-                bank.img;
-        }
-
-
-        bankImg.alt =
-            bank.name || "Banco";
-    }
-
+    /*
+     * Campo hidden.
+     */
 
     if (bankSource) {
-
-        bankSource.value =
-            bank.name || "";
+        bankSource.value =  bank.name || "";
     }
+
 }
+
+
 
 
 /* =========================================================
@@ -1145,76 +1422,102 @@ function onloadData() {
 
 function getContextPath() {
 
-    /*
-     * Preferencialmente o JSP deve definir:
-     *
-     * var contextPath =
-     *     '${pageContext.request.contextPath}';
-     */
-
-    if (
-        typeof window.contextPath !== "undefined" &&
-        window.contextPath !== null
-    ) {
-
-        return window.contextPath;
+    if ( typeof window.contextPath !== "undefined" && window.contextPath !== null) {
+        return String(window.contextPath).replace(/\/$/,"");
     }
 
+    var pathname = window.location.pathname;
 
-    /*
-     * Fallback.
-     */
-
-    var pathname =
-        window.location.pathname;
-
-
-    var firstSlash =
-        pathname.indexOf(
-            "/",
-            1
-        );
-
-
-    if (firstSlash === -1) {
-
+    if (!pathname) {
         return "";
     }
 
+    var firstSlash = pathname.indexOf("/", 1);
 
-    return pathname.substring(
-        0,
-        firstSlash
+    if (firstSlash === -1) {
+        return "";
+    }
+    return pathname.substring(0, firstSlash);
+}
+
+
+
+
+/* =========================================================
+   MODAL DE RESGATE
+   ========================================================= */
+
+function setupRescueModal() {
+
+    var modal = document.getElementById("rescueModal");
+    var openButton = document.getElementById("btn-open-rescue" );
+    var closeButton = document.getElementById("btn-close-modal");
+    var cancelButton = document.getElementById("btn-cancel-rescue");
+
+    if (!modal || !openButton) {
+        return;
+    }
+
+    function openModal() {
+        modal.classList.add("show");
+        document.body.classList.add("modal-open");
+    }
+
+    function closeModal() {
+        modal.classList.remove("show");
+        document.body.classList.remove("modal-open");
+    }
+
+    openButton.addEventListener("click", function (event) {
+            event.preventDefault();
+            openModal();
+        }
+    );
+
+    if (closeButton) {
+        closeButton.addEventListener("click",function () {
+                closeModal();
+            }
+        );
+    }
+
+    if (cancelButton) {
+        cancelButton.addEventListener("click", function () {
+                closeModal();
+            }
+        );
+    }
+
+    modal.addEventListener("click",function (event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    );
+
+    document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && modal.classList.contains("show")) {
+                closeModal();
+            }
+        }
     );
 }
+
+
 
 
 /* =========================================================
    ESCAPA HTML
    ========================================================= */
 
-function escapeHtml(
-    value
-) {
+function escapeHtml(value) {
 
-    if (
-        value === null ||
-        typeof value === "undefined"
-    ) {
-
+    if ( value === null ||typeof value === "undefined") {
         return "";
     }
 
-
-    var div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        String(value);
-
+    var div = document.createElement("div");
+    div.textContent = String(value);
 
     return div.innerHTML;
 }

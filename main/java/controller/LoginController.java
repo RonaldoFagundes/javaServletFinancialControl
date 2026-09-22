@@ -21,8 +21,7 @@ public class LoginController extends HttpServlet {
      * portanto não pode ser acessada diretamente
      * pelo navegador.
      */
-    private static final String LOGIN_PAGE =
-            "/WEB-INF/view/login/home.jsp";
+    private static final String LOGIN_PAGE = "/WEB-INF/view/login/home.jsp";
 
 
     /*
@@ -36,10 +35,9 @@ public class LoginController extends HttpServlet {
     protected void doGet(
             HttpServletRequest request,
             HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException {    	
     	
-    	
-    	 response.setHeader(
+    	    response.setHeader(
     	            "Cache-Control",
     	            "no-cache, no-store, must-revalidate"
     	    );
@@ -61,13 +59,8 @@ public class LoginController extends HttpServlet {
          * Se já existe usuário autenticado,
          * não mostra novamente o login.
          */
-        if (session != null
-                && session.getAttribute("loggedUser") != null) {
-
-            response.sendRedirect(
-                    request.getContextPath() + "/main"
-            );
-
+        if (session != null && session.getAttribute("loggedUser") != null) {
+            response.sendRedirect( request.getContextPath() + "/main" );
             return;
         }
 
@@ -78,9 +71,7 @@ public class LoginController extends HttpServlet {
          * Mostra:
          * /WEB-INF/view/login/home.jsp
          */
-        request.getRequestDispatcher(
-                LOGIN_PAGE
-        ).forward(
+        request.getRequestDispatcher(LOGIN_PAGE).forward(
                 request,
                 response
         );
@@ -106,11 +97,8 @@ public class LoginController extends HttpServlet {
         /*
          * Recebe os dados do formulário.
          */
-        String user =
-                request.getParameter("user");
-
-        String password =
-                request.getParameter("password");
+        String user = request.getParameter("user");
+        String password = request.getParameter("password");
 
 
         /*
@@ -124,19 +112,15 @@ public class LoginController extends HttpServlet {
         /*
          * Validação dos campos.
          */
-        if (user == null
-                || user.isEmpty()
-                || password == null
-                || password.isEmpty()) {
+        if (user == null || user.isEmpty() ||
+        	password == null || password.isEmpty()) {
 
             request.setAttribute(
                     "error",
                     "Usuário e senha são obrigatórios."
             );
 
-            request.getRequestDispatcher(
-                    LOGIN_PAGE
-            ).forward(
+            request.getRequestDispatcher(LOGIN_PAGE).forward(
                     request,
                     response
             );
@@ -155,9 +139,7 @@ public class LoginController extends HttpServlet {
          *
          * Depois podemos substituir por LoginDao.
          */
-        boolean loginValido =
-                "admin".equals(user)
-                && "123".equals(password);
+        boolean loginValido = "admin".equals(user) && "123".equals(password);
 
 
         /*
@@ -170,8 +152,7 @@ public class LoginController extends HttpServlet {
             /*
              * Cria a sessão.
              */
-            HttpSession session =
-                    request.getSession(true);
+            HttpSession session = request.getSession(true);
 
 
             /*
@@ -180,10 +161,7 @@ public class LoginController extends HttpServlet {
              * O LoginFilter verifica exatamente
              * este atributo.
              */
-            session.setAttribute(
-                    "loggedUser",
-                    user
-            );
+            session.setAttribute("loggedUser", user);
 
 
             /*
@@ -195,9 +173,7 @@ public class LoginController extends HttpServlet {
              *
              * A tela de login já foi utilizada.
              */
-            response.sendRedirect(
-                    request.getContextPath() + "/main"
-            );
+            response.sendRedirect(request.getContextPath() + "/main");
 
             return;
         }
@@ -217,9 +193,7 @@ public class LoginController extends HttpServlet {
         /*
          * Volta para a tela de login.
          */
-        request.getRequestDispatcher(
-                LOGIN_PAGE
-        ).forward(
+        request.getRequestDispatcher(LOGIN_PAGE ).forward(
                 request,
                 response
         );

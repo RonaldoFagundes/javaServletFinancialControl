@@ -24,21 +24,25 @@ public class InvestmentController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private final InvestmentsDao investmentsDao =
-            new InvestmentsDao();
+    private final InvestmentsDao investmentsDao =  new InvestmentsDao();
+    private final InvestmentsService investmentsService = new InvestmentsService();
 
-    private final InvestmentsService investmentsService =
-            new InvestmentsService();
-
+    
+    
     @Override
     protected void doGet(
             HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
 
-        String action = request.getServletPath();
+        String action =
+                request.getServletPath();
 
         switch (action) {
+
+            case "/readInvest":
+                listInvestments(request, response);
+                break;
 
             case "/newInvest":
                 newInvestment(request, response);
@@ -49,10 +53,15 @@ public class InvestmentController extends HttpServlet {
                 break;
 
             default:
-                response.sendRedirect("home.jsp");
+
+                response.sendRedirect(
+                        request.getContextPath() + "/main"
+                );
+
                 break;
         }
     }
+
 
     @Override
     protected void doPost(
@@ -75,10 +84,27 @@ public class InvestmentController extends HttpServlet {
                 break;
 
             default:
-                response.sendRedirect("home.jsp");
+                response.sendRedirect(
+                        request.getContextPath() + "/main"
+                );
                 break;
         }
     }
+
+
+    /*
+     * =====================================================
+     * LISTAR INVESTIMENTOS
+     * =====================================================
+     *
+     * Recebe o ID da conta através de:
+     *
+     * idAcc
+     *
+     * Busca as aplicações pertencentes à conta
+     * e encaminha para list_investments.jsp.
+     *
+     */
 
     private void listInvestments(
             HttpServletRequest request,
@@ -87,32 +113,72 @@ public class InvestmentController extends HttpServlet {
 
         try {
 
-            int idAccount =
-                    Integer.parseInt(
-                            request.getParameter("idAcc"));
+            int idAccount = Integer.parseInt(
+                    request.getParameter("idAcc")
+            );
+
 
             InvestmentsModel investment =
                     new InvestmentsModel();
 
             investment.setFkBka(idAccount);
 
+
             ArrayList<InvestmentsModel> list =
                     investmentsDao.listInvestments(
-                            investment);
+                            investment
+                    );
+
+
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+
 
             request.setAttribute(
                     "investments",
-                    list);
+                    list
+            );
+
+
+            request.setAttribute(
+                    "idAcc",
+                    idAccount
+            );
+
 
             request.getRequestDispatcher(
-                    "investments/list_investments.jsp")
-                    .forward(request, response);
+                    "/WEB-INF/view/investments/list_investments.jsp"
+            ).forward(
+                    request,
+                    response
+            );
+
 
         } catch (NumberFormatException e) {
 
-            response.sendRedirect("home.jsp");
+            e.printStackTrace();
+
+            response.sendRedirect(
+                    request.getContextPath() + "/main"
+            );
         }
     }
+
+    
+    
+    
+    
+    
+    
+    
+    
+
+    /*
+     * =====================================================
+     * NOVA APLICAÇÃO
+     * =====================================================
+     */
 
     private void newInvestment(
             HttpServletRequest request,
@@ -121,24 +187,55 @@ public class InvestmentController extends HttpServlet {
 
         try {
 
+            String parameter =
+                    request.getParameter("idAcc");
+
+
+            if (parameter == null ||
+                parameter.trim().isEmpty()) {
+
+                response.sendRedirect(
+                        request.getContextPath() + "/main"
+                );
+
+                return;
+            }
+
+
             int idAccount =
-                    Integer.parseInt(
-                            request.getParameter("idAcc"));
+                    Integer.parseInt(parameter);
+
 
             request.setAttribute(
                     "fkbka",
-                    idAccount);
+                    idAccount
+            );
+
 
             request.getRequestDispatcher(
-                    "investments/cad_investments.jsp")
-                    .forward(request, response);
+                    "/WEB-INF/view/investments/cad_investments.jsp"
+            ).forward(
+                    request,
+                    response
+            );
+
 
         } catch (NumberFormatException e) {
 
-            response.sendRedirect("home.jsp");
+            response.sendRedirect(
+                    request.getContextPath() + "/main"
+            );
         }
     }
 
+
+    /*
+     * =====================================================
+     * SELECIONAR INVESTIMENTO
+     * =====================================================
+     */
+    
+    
     private void selectInvestment(
             HttpServletRequest request,
             HttpServletResponse response)
@@ -146,31 +243,89 @@ public class InvestmentController extends HttpServlet {
 
         try {
 
-            int idInvestment =
-                    Integer.parseInt(
-                            request.getParameter("idInv"));
+            int idInvestment = Integer.parseInt(
+                    request.getParameter("idInv")
+            );
+
 
             InvestmentsModel investment =
                     new InvestmentsModel();
 
             investment.setId(idInvestment);
 
-            investmentsDao.selectInvestById(
-                    investment);
 
+            /*
+             * Busca a aplicação.
+             */
+            investmentsDao.selectInvestById(
+                    investment
+            );
+
+
+            /*
+             * Verifica se encontrou.
+             */
+            if (investment.getId() <= 0) {
+
+                response.sendRedirect(
+                        request.getContextPath() + "/main"
+                );
+
+                return;
+            }
+
+
+            /*
+             * Envia aplicação para JSP.
+             */
             request.setAttribute(
                     "investment",
-                    investment);
+                    investment
+            );
+
+
+            /*
+             * Envia também o ID da conta.
+             */
+            request.setAttribute(
+                    "idAcc",
+                    investment.getFkBka()
+            );
+
 
             request.getRequestDispatcher(
-                    "investments/slctd_investments.jsp")
-                    .forward(request, response);
+                    "/WEB-INF/view/investments/slctd_investment.jsp"
+            ).forward(
+                    request,
+                    response
+            );
+
 
         } catch (NumberFormatException e) {
 
-            response.sendRedirect("home.jsp");
+            e.printStackTrace();
+
+            response.sendRedirect(
+                    request.getContextPath() + "/main"
+            );
         }
     }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    /*
+     * =====================================================
+     * CRIAR INVESTIMENTO
+     * =====================================================
+     */
 
     private void createInvestment(
             HttpServletRequest request,
@@ -181,58 +336,110 @@ public class InvestmentController extends HttpServlet {
 
             BigDecimal rate =
                     new BigDecimal(
-                            request.getParameter("rate"));
+                            request.getParameter("rate")
+                    );
+
 
             BigDecimal price =
                     new BigDecimal(
-                            request.getParameter("price"));
+                            request.getParameter("price")
+                    );
+
 
             String date =
                     request.getParameter("open");
 
+
             String broker =
                     request.getParameter("broker");
+
 
             String description =
                     request.getParameter("desc");
 
+
             int idAccount =
                     Integer.parseInt(
-                            request.getParameter("fk"));
+                            request.getParameter("fk")
+                    );
+
 
             /*
-             * Aqui entra a gravação do investimento.
-             *
-             * Precisamos conhecer o InvestmentsDao completo
-             * para fazer o INSERT corretamente.
+             * =================================================
+             * CRIA O MODEL
+             * =================================================
              */
 
             InvestmentsModel investment =
                     new InvestmentsModel();
 
-            investment.setFkBka(idAccount);
+
+            investment.setFkBka(
+                    idAccount
+            );
+
+
+            /*
+             * =================================================
+             * GRAVAÇÃO DO INVESTIMENTO
+             * =================================================
+             *
+             * A gravação ainda não foi implementada aqui,
+             * pois depende da implementação do InvestmentsDao.
+             *
+             */
+
+
+            /*
+             * =================================================
+             * ATUALIZA A LISTA
+             * =================================================
+             */
 
             ArrayList<InvestmentsModel> list =
                     investmentsDao.listInvestments(
-                            investment);
+                            investment
+                    );
+
+
+            if (list == null) {
+
+                list =
+                        new ArrayList<InvestmentsModel>();
+            }
+
 
             request.setAttribute(
                     "investments",
-                    list);
+                    list
+            );
+
 
             request.getRequestDispatcher(
-                    "investments/list_investments.jsp")
-                    .forward(request, response);
+                    "/WEB-INF/view/investments/list_investments.jsp"
+            ).forward(
+                    request,
+                    response
+            );
+
 
         } catch (NumberFormatException e) {
 
             request.setAttribute(
                     "error",
-                    "Dados numéricos inválidos.");
+                    "Dados numéricos inválidos."
+            );
+
 
             request.getRequestDispatcher(
-                    "investments/cad_investments.jsp")
-                    .forward(request, response);
+                    "/WEB-INF/view/investments/cad_investments.jsp"
+            ).forward(
+                    request,
+                    response
+            );
         }
     }
+    
+    
+    
 }

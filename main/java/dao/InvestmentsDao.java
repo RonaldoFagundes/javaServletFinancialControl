@@ -97,7 +97,184 @@ public class InvestmentsDao {
 	
 	
 	
+	public void selectInvestById(InvestmentsModel invm) {
+
+	    query =
+	        "SELECT " +
+	        "i.id_ivt AS id, " +
+	        "i.broker_name_ivt AS broker, " +
+	        "i.cat_ivt AS cat, " +
+	        "i.type_ivt AS type, " +
+	        "i.open_ivt AS open, " +
+	        "i.expery_ivt AS expery, " +
+	        "i.rate_type_ivt AS rate_type, " +
+	        "i.rate_ivt AS rate, " +
+	        "i.value_ivt AS aplication, " +
+	        "i.fk_bka AS fk_bka, " +
+	        "IFNULL(SUM(p.income_pro), 0) AS profitability, " +
+	        "IFNULL(SUM(r.value_rsc), 0) AS rescue, " +
+	        "i.value_ivt + " +
+	        "IFNULL(SUM(p.income_pro), 0) - " +
+	        "IFNULL(SUM(r.value_rsc), 0) AS amount " +
+
+	        "FROM tb_investments i " +
+
+	        "LEFT JOIN tb_profitability p " +
+	        "ON i.id_ivt = p.fk_ivt " +
+
+	        "LEFT JOIN tb_rescue r " +
+	        "ON i.id_ivt = r.fk_ivt " +
+
+	        "WHERE i.id_ivt = ? " +
+
+	        "GROUP BY " +
+	        "i.id_ivt, " +
+	        "i.broker_name_ivt, " +
+	        "i.cat_ivt, " +
+	        "i.type_ivt, " +
+	        "i.open_ivt, " +
+	        "i.expery_ivt, " +
+	        "i.rate_type_ivt, " +
+	        "i.rate_ivt, " +
+	        "i.value_ivt, " +
+	        "i.fk_bka";
+
+
+	    try {
+
+	        conn = ConnectionFactory.getConnection();
+
+	        pst = conn.prepareStatement(query);
+
+	        pst.setInt(
+	            1,
+	            invm.getId()
+	        );
+
+	        rs = pst.executeQuery();
+
+
+	        if (rs.next()) {
+
+	            /*
+	             * ==========================================
+	             * DADOS DA APLICAÇÃO
+	             * ==========================================
+	             */
+
+	            invm.setId(
+	                rs.getInt("id")
+	            );
+
+	            invm.setBroker(
+	                rs.getString("broker")
+	            );
+
+	            invm.setCat(
+	                rs.getString("cat")
+	            );
+
+	            invm.setType(
+	                rs.getString("type")
+	            );
+
+	            invm.setOpen(
+	                rs.getString("open")
+	            );
+
+	            invm.setExpery(
+	                rs.getString("expery")
+	            );
+
+	            invm.setRateType(
+	                rs.getString("rate_type")
+	            );
+
+	            invm.setRate(
+	                rs.getBigDecimal("rate")
+	            );
+
+	            invm.setValue(
+	                rs.getBigDecimal("aplication")
+	            );
+
+
+	            /*
+	             * ==========================================
+	             * ID DA CONTA
+	             * ==========================================
+	             */
+
+	            invm.setFkBka(
+	                rs.getInt("fk_bka")
+	            );
+
+
+	            /*
+	             * ==========================================
+	             * VALORES CALCULADOS
+	             * ==========================================
+	             */
+
+	            invm.setProfitability(
+	                rs.getBigDecimal("profitability")
+	            );
+
+	            invm.setRescue(
+	                rs.getBigDecimal("rescue")
+	            );
+
+	            invm.setAmount(
+	                rs.getBigDecimal("amount")
+	            );
+
+
+	            System.out.println(
+	                "Aplicação: " + invm.getId()
+	            );
+
+	            System.out.println(
+	                "Conta: " + invm.getFkBka()
+	            );
+
+	        } else {
+
+	            System.out.println(
+	                "Aplicação não encontrada: " +
+	                invm.getId()
+	            );
+	        }
+
+
+	    } catch (Exception e) {
+
+	        e.printStackTrace();
+
+	    } finally {
+
+	        try {
+
+	            if (rs != null) {
+	                rs.close();
+	            }
+
+	            if (pst != null) {
+	                pst.close();
+	            }
+
+	            if (conn != null) {
+	                conn.close();
+	            }
+
+	        } catch (Exception e) {
+
+	            e.printStackTrace();
+	        }
+	    }
+	}
+
 	
+/*	
 public void selectInvestById(InvestmentsModel invm) {
 		
  query = "SELECT i.id_ivt AS id, i.broker_name_ivt AS broker, i.type_ivt AS type, i.open_ivt AS open, i.expery_ivt AS expery, i.rate_type_ivt AS `index`, i.rate_ivt AS rate, i.value_ivt AS aplication, IFNULL(SUM(p.income_pro), 0) AS profitability, IFNULL(SUM(r.value_rsc), 0)  AS rescue, i.value_ivt + IFNULL(SUM(p.income_pro), 0) - IFNULL(SUM(r.value_rsc), 0) AS amount FROM tb_investments i LEFT JOIN tb_profitability p ON i.id_ivt = p.fk_ivt LEFT JOIN tb_rescue r ON i.id_ivt = r.fk_ivt WHERE i.id_ivt = ? GROUP BY i.id_ivt, i.broker_name_ivt, i.type_ivt, i.open_ivt, i.expery_ivt, i.rate_type_ivt, i.rate_ivt, i.value_ivt";
@@ -135,7 +312,7 @@ public void selectInvestById(InvestmentsModel invm) {
 		
 	}
 
-
+*/
 
 
 

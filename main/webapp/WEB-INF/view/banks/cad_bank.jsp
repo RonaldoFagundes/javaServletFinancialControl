@@ -265,24 +265,18 @@
          ===================================================== -->
 
     <footer>
-
-        <div>
-
-            <span>
-                Sistema de Gestão Financeira
-            </span>
-
-        </div>
-
-        <div>
-
-            <span class="version">
-                v1.5.26
-            </span>
-
-        </div>
-
-    </footer>
+       <div>
+         <a
+            href="https://github.com/RonaldoFagundes"
+            target="_blank"
+            rel="noopener noreferrer">
+           Developed by RFagundes
+         </a>
+      </div>
+      <div>
+         <span class="version">v1.5.26</span>
+      </div>  
+  </footer>
 
 </body>
 

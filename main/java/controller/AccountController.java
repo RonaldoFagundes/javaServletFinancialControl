@@ -35,9 +35,7 @@ public class AccountController extends HttpServlet {
         }
 
         if (parameter == null || parameter.trim().isEmpty()) {
-            response.sendRedirect(
-                    request.getContextPath() + "/main"
-            );
+            response.sendRedirect( request.getContextPath() + "/main");
             return;
         }
 
@@ -51,14 +49,12 @@ public class AccountController extends HttpServlet {
             AccountsModel account = new AccountsModel();
             account.setFkbnk(idBank);
 
-            ArrayList<AccountsModel> accounts =
-                    accountsDao.listAccounts(account);
+            ArrayList<AccountsModel> accounts = accountsDao.listAccounts(account);
 
             /*
              * Busca os dados do banco.
              */
-            BankModel bank =
-                    bankDao.findById(idBank);
+            BankModel bank = bankDao.findById(idBank);
 
             /*
              * Envia os dados para accounts.jsp.

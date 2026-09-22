@@ -75,10 +75,7 @@ public class LoginFilter implements Filter {
 
         HttpSession session =  req.getSession(false);
 
-
-        boolean loggedIn =
-                session != null
-                && session.getAttribute("loggedUser") != null;
+        boolean loggedIn = session != null && session.getAttribute("loggedUser") != null;
 
 
         /*
@@ -88,7 +85,6 @@ public class LoginFilter implements Filter {
          */
 
         if (loggedIn) {
-
             chain.doFilter(
                     request,
                     response
@@ -104,9 +100,7 @@ public class LoginFilter implements Filter {
          * =================================================
          */
 
-        resp.sendRedirect(
-                req.getContextPath() + "/login"
-        );
+        resp.sendRedirect(req.getContextPath() + "/login");
     }
 
 
